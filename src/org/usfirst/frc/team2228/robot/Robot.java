@@ -15,7 +15,6 @@ public class Robot extends IterativeRobot {
 	DriveBase drive;
 	
     public void robotInit() {
-    	
     	drive = new DriveBase(0/*joy*/, 6/*BR*/, 7/*BL*/, 8/*FL*/, 9/*FR*/);
     }
 
@@ -30,9 +29,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	
     	drive.mecanumDrive();
-    	
     }
     
     /**
