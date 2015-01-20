@@ -14,10 +14,10 @@ public class Robot extends IterativeRobot {
      */
 	
 	DriveBase drive;
-	PowerDistributionPanel panel = new PowerDistributionPanel();
+	PowerDistributionPanel panel;
 	
     public void robotInit() {
-    	panel.clearStickyFaults();
+    	panel = new PowerDistributionPanel();
     	drive = new DriveBase(0/*joy*/, 6/*BR*/, 7/*BL*/, 8/*FL*/, 9/*FR*/);
     }
 
@@ -32,6 +32,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	panel.clearStickyFaults();
     	drive.mecanumDrive();
     }
     

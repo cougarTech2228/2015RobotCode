@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class DriveBase{
-
     AdvancedJoystick joy;
     
     Wheel wheelBL;
