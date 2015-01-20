@@ -129,7 +129,6 @@ class Mode{
 		this.invert = invert;
 		
 		return true;
-	}
-	
+	}	
 }
 

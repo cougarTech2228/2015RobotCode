@@ -13,8 +13,9 @@ package org.usfirst.frc.team2228.robot;
  * @param sPID			pid values for speed control
 **/
 public class Wheel extends CANJaguar{
-	private double port;		//CAN id
-	private double encoderCPR;	// counts per revolution
+	public double port;		//CAN id
+	public double encoderCPR;	// counts per revolution
+	public double ramp;
 	
 	public String name;			//name for this wheel 
     
