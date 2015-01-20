@@ -1,19 +1,25 @@
+package org.usfirst.frc.team2228.robot;
+
+import edu.wpi.first.wpilibj.Joystick;
+
 //sorry no javadoc yet
 
-public class AdvancedJoystick extends Joystick(){
+public class AdvancedJoystick extends Joystick{
 	double rotation = 0;
 	
 	Mode rMode;
 	Mode lMode;
 	
-	public AdvancedJoystick(port){
+	boolean invert = false;
+	
+	public AdvancedJoystick(int port){
 		super(port);
 		rMode = new Mode();
 		lMode = new Mode();
 	}
 	
 	public double getDirectionRadians(){
-		return super.getDirection() + rotation + invert ? Math.PI : 0;
+		return super.getDirectionRadians() + rotation + (invert ? Math.PI : 0);
 	}
 	
 	public double getMagnitude(){
@@ -34,12 +40,12 @@ public class AdvancedJoystick extends Joystick(){
 		basic -= lMode.min;
 		basic = basic*(lMode.max - lMode.min)/(1 - lMode.min);
 		
-		double r = 1 / (Math.sqrt(2)*sin(2*Math.atan(1/(Math.sqrt(2)*lMode.curvature))));
+		double r = 1 / (Math.sqrt(2)*Math.sin(2*Math.atan(1/(Math.sqrt(2)*lMode.curvature))));
 		double xc = 1/2 + (lMode.curvature-r)/Math.sqrt(2);  
 		double yc = 1/2 + (r-lMode.curvature)/Math.sqrt(2);
 
-		double output = Math.sqrt(r**2 - (basic - xc)**2) + yc;
-		double output *= lMode.limit*negative;
+		double output = Math.sqrt(Math.pow(r, 2) - Math.pow(basic - xc , 2)) + yc;
+		output *= lMode.limit*negative;
 		
 		return output;
 	}
@@ -62,12 +68,12 @@ public class AdvancedJoystick extends Joystick(){
 		basic -= rMode.min;
 		basic = basic*(rMode.max - rMode.min)/(1 - rMode.min);
 		
-		double r = 1 / (Math.sqrt(2)*sin(2*Math.atan(1/(Math.sqrt(2)*rMode.curvature))));
+		double r = 1 / (Math.sqrt(2)*Math.sin(2*Math.atan(1/(Math.sqrt(2)*rMode.curvature))));
 		double xc = 1/2 + (rMode.curvature-r)/Math.sqrt(2);  
 		double yc = 1/2 + (r-rMode.curvature)/Math.sqrt(2);
 
-		double output = Math.sqrt(r**2 - (basic - xc)**2) + yc;
-		double output *= rMode.limit * negative;
+		double output = Math.sqrt(Math.pow(r, 2) - Math.pow(basic - xc,2)) + yc;
+		output *= rMode.limit * negative;
 		
 		return output;
 	}
@@ -117,9 +123,9 @@ class Mode{
 		
 	}
 	
-	public Mode()(double min, double max, double limit, double curvature, boolean invert){
+	public Mode(double min, double max, double limit, double curvature, boolean invert){
 		if(min > max || min < 0 || max > 1 || limit < 0 || curvature > .29){
-			return false;
+			return;
 		}
 		
 		this.min = min;
@@ -128,7 +134,6 @@ class Mode{
 		this.curvature = curvature;
 		this.invert = invert;
 		
-		return true;
 	}
 	
 }

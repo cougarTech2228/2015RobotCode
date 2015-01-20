@@ -1,6 +1,9 @@
 
 package org.usfirst.frc.team2228.robot; 
 
+import edu.wpi.first.wpilibj.CANJaguar;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * A class for controlling a wheel through a jaguar hooked up using CAN.
  * Assumes use of a black jaguar motor controller with a quadrature encoder connected  
@@ -13,8 +16,8 @@ package org.usfirst.frc.team2228.robot;
  * @param sPID			pid values for speed control
 **/
 public class Wheel extends CANJaguar{
-	private double port;		//CAN id
-	private double encoderCPR;	// counts per revolution
+	public int port;		//CAN id
+	public int encoderCPR;	// counts per revolution
 	
 	public String name;			//name for this wheel 
     
@@ -63,7 +66,7 @@ public class Wheel extends CANJaguar{
 	 * @param revs number of revs to turn
 	 **/
 	public void move(double revs){
-		if(this.getControlMode().equals(CANJaguar.kPosition)){
+		if(this.getControlMode().equals(CANJaguar.ControlMode.Position)){
 			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, pPID[0], pPID[1], pPID[2]);
 			this.enableControl();
 		}
@@ -85,7 +88,7 @@ public class Wheel extends CANJaguar{
 	 * @param speed rate aft which the wheel will turn in revs per minute
 	 **/	
 	public void drive(double speed){
-		if(this.getControlMode().equals(CANJaguar.kSpeed)){
+		if(this.getControlMode().equals(CANJaguar.ControlMode.Speed)){
 			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, sPID[0], sPID[1], sPID[2]);
 			this.enableControl();
 		}
@@ -107,7 +110,7 @@ public class Wheel extends CANJaguar{
 	 * @param volts percent voltage to drive the motor
 	 **/
 	public void driveVoltage(double volts){
-		if(this.getControlMode().equals(CANJaguar.kPercent)){
+		if(this.getControlMode().equals(CANJaguar.ControlMode.PercentVbus)){
 			this.setPercentMode();
 			this.enableControl();
 		}
@@ -115,7 +118,7 @@ public class Wheel extends CANJaguar{
 		SmartDashboard.putNumber(name, volts);
 
 		if(invert){
-			revs *= -1;
+			volts *= -1;
 		}
 		
 		//push new motor voltages to the Jaguars
