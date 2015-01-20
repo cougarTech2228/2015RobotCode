@@ -13,15 +13,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveBase{
 
-    Joystick joy;
+    AdvancedJoystick joy;
     
-    Wheel FR;
-	Wheel FL;
-    Wheel BR;
-    Wheel BL;
+    Wheel wheelFR;
+	Wheel wheelFL;
+    Wheel wheelBR;
+    Wheel wheelBL;
 	
 	double maxSpeed = 60; //in rpm
-	double COUNTS_PER_REV;
+	int COUNTS_PER_REV;
 	
     public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
     	joy = new AdvancedJoystick(joyPort);		       
