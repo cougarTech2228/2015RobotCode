@@ -1,10 +1,5 @@
 package org.usfirst.frc.team2228.robot;
 
-import edu.wpi.first.wpilibj.CANJaguar;
-import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
@@ -15,10 +10,11 @@ public class DriveBase{
 
     AdvancedJoystick joy;
     
-    Wheel wheelFR;
-	Wheel wheelFL;
-    Wheel wheelBR;
     Wheel wheelBL;
+    Wheel wheelBR;
+	Wheel wheelFL;
+    Wheel wheelFR;
+
 	
 	double maxSpeed = 60; //in rpm
 	int COUNTS_PER_REV;

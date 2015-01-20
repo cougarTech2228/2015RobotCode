@@ -2,6 +2,7 @@
 package org.usfirst.frc.team2228.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
  * MainClass
@@ -13,8 +14,10 @@ public class Robot extends IterativeRobot {
      */
 	
 	DriveBase drive;
+	PowerDistributionPanel panel = new PowerDistributionPanel();
 	
     public void robotInit() {
+    	panel.clearStickyFaults();
     	drive = new DriveBase(0/*joy*/, 6/*BR*/, 7/*BL*/, 8/*FL*/, 9/*FR*/);
     }
 
