@@ -134,7 +134,12 @@ class Mode{
 		this.curvature = curvature;
 		this.invert = invert;
 		
+<<<<<<< HEAD
+		return true;
+	}	
+=======
 	}
 	
+>>>>>>> 6ff8c285f1ad7ae31e7cd12558ca0aad542dda9e
 }
 
