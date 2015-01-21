@@ -110,6 +110,11 @@ public class AdvancedJoystick extends Joystick{
 		setLinearMode(0,.95,1,.05,false);
 		setRotationalMode(.1,1,.8,.2,false);
 	}
+	
+	public void basicMode(){
+//		setLinearMode(0,1,.05,false);
+		setRotationalMode(.1,1,.8,.2,false);
+	}
 }
 
 class Mode{	
@@ -133,7 +138,5 @@ class Mode{
 		this.limit = limit;
 		this.curvature = curvature;
 		this.invert = invert;
-
-		return true;
 	}	
 }
