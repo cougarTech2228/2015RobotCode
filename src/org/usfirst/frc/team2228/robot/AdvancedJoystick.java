@@ -41,10 +41,10 @@ public class AdvancedJoystick extends Joystick{
 		basic = basic*(lMode.max - lMode.min)/(1 - lMode.min);
 		
 		double r = 1 / (Math.sqrt(2)*Math.sin(2*Math.atan(1/(Math.sqrt(2)*lMode.curvature))));
-		double xc = 1/2 + (lMode.curvature-r)/Math.sqrt(2);  
-		double yc = 1/2 + (r-lMode.curvature)/Math.sqrt(2);
+		double xc = 1/2 + (r-lMode.curvature)/Math.sqrt(2);  
+		double yc = 1/2 + (lMode.curvature-r)/Math.sqrt(2);
 
-		double output = Math.sqrt(Math.pow(r, 2) - Math.pow(basic - xc , 2)) + yc;
+		double output = -1*Math.sqrt(Math.pow(r, 2) - Math.pow(basic - xc , 2)) + yc;
 		output *= lMode.limit*negative;
 		
 		return output;
