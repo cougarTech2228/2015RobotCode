@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2228.robot;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
@@ -13,7 +14,7 @@ public class DriveBase{
     Wheel wheelBR;
 	Wheel wheelFL;
     Wheel wheelFR;
-
+    double panel;
 	
 	double maxSpeed = 60; //in rpm
 	int COUNTS_PER_REV;
@@ -22,6 +23,8 @@ public class DriveBase{
     	joy = new AdvancedJoystick(joyPort);		       
 		joy.defaultMode();
         
+		panel = new PowerDistributionPanel().getTotalPower();
+		
         wheelFR = new Wheel(fR, COUNTS_PER_REV, "front right");
         wheelFL = new Wheel(fL, COUNTS_PER_REV, "front left");        
         wheelBR = new Wheel(bR, COUNTS_PER_REV, "back right");        
@@ -53,9 +56,17 @@ public class DriveBase{
     	v4 = lMag*Math.sin(dir + (Math.PI/4)) - rotate;
     	
     	//push new motor speed to the Jaguars
+    	/*
     	wheelFR.drive(v1*maxSpeed);
 		wheelFL.drive(v2*maxSpeed);
 		wheelBR.drive(v3*maxSpeed);
 		wheelBL.drive(v4*maxSpeed);
+		*/
+    	/*
+    	wheelFR.driveVoltage(v1);
+		wheelFL.driveVoltage(v2);
+		wheelBR.driveVoltage(v3);
+		wheelBL.driveVoltage(v4);
+		*/
     }
 }
