@@ -13,84 +13,63 @@ public class Logger{
 	
 	static double initialTime = Timer.getFPGATimestamp();
 	
-	static String mod = "DriveBase";
+	static long lastTimeILogged = 0;
+	static File file;
 	
-	private static String Scrub(String s){
-		s = s.replace(":", "-");
-		return s;
-	}
 	
-	private static String Scrub(int d){
+	public static boolean disable = true;
+	public static boolean verbose = false;
 		
-		String s;
-		if(d >= 60 && d < 120){
-			
-			s = "1:" + (d-60);
-			
-		}else if(d >=120){
-			
-			s = "2:" + (6-120);
-			
-		}else{
-			
-			s = "0:" + d;
-			
-		}
-		
-		return s;
-	}
-	
 	public static void resetTime(){
 		initialTime = Timer.getFPGATimestamp();
 	}
 	
-	public static int getData(){
-		int x = (int)(Math.random()*100)+1;
-		return x;
+	private static String timeScrub(int d){
+		return String.valueOf(d/60) + ":" + String.valueOf(d%60);
 	}
-
 	
-	static boolean go = true;
-	static long lastTimeILogged = 0;
+	private static String dateScrub(String date){
+		return date.replaceAll(":", "-");
+		
+	}
+	
+	public static void setUpFile(){
+		String date = dateScrub(new Date().toString());
+		file = new File("/U/Data" + date + ".txt");
+	}
+	
 	public static void log(String s, double inP, int howOften){
-			
 			long timePassed = System.currentTimeMillis() - lastTimeILogged;
 			if(timePassed > howOften){
 				lastTimeILogged = System.currentTimeMillis();
-				DriverStation ds = DriverStation.getInstance();
 
-				Date nowTime = new Date();
-				String g = Scrub(nowTime.toString());
+				String time = timeScrub((int)(Timer.getFPGATimestamp()-initialTime));				
+				String content = time + " >>> POWER USAGE: " + inP;
 				
-				double matchTime = Timer.getFPGATimestamp()-initialTime;
-				
-				System.out.println(matchTime);
-				
-				String content = Scrub((int)(matchTime)) + " >>> POWER USAGE: " + inP;
-				File file = new File("/U/Data" + s + ".txt");
-				boolean append = true;
-				
-				try (FileOutputStream fop = new FileOutputStream(file, append)) {
-					
-					// if file doesn't exists, then create it
-					if (!file.exists()) {
-						file.createNewFile();
-					}
-					
-					// get the content in bytes
-					byte[] contentInBytes = content.getBytes();
-					
-					fop.write(contentInBytes);
-					fop.write(System.getProperty("line.separator").getBytes());
-					fop.flush();
-					fop.close();
-					
-					System.out.println("Done");
-		 
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				log(content);
+			}
+	}
+	
+	public static void log(String message){
+		try (FileOutputStream fop = new FileOutputStream(file, true)) {
+			
+			// if file doesn't exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
 			}
 			
+			// get the content in bytes
+			byte[] contentInBytes = message.getBytes();
+			
+			fop.write(contentInBytes);
+			fop.write(System.getProperty("line.separator").getBytes());
+			fop.flush();
+			fop.close();
+			
+			System.out.println("Done");
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

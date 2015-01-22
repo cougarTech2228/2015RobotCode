@@ -14,7 +14,7 @@ public class AdvancedJoystick extends Joystick{
 	
 	Mode rMode;
 	Mode lMode;
-	
+
 	public AdvancedJoystick(int port){
 		super(port);
 		rMode = new Mode();
@@ -22,7 +22,7 @@ public class AdvancedJoystick extends Joystick{
 	}
 	
 	public double getDirectionRadians(){
-		return super.getDirectionRadians() + rotation + (invert ? Math.PI : 0);
+		return super.getDirectionRadians() + rotation + (lMode.invert ? Math.PI : 0);
 	}
 	
 	public double getMagnitude(){
@@ -55,7 +55,7 @@ public class AdvancedJoystick extends Joystick{
 	
 	public double getTwist(){
 		double basic = super.getTwist();
-		int negative = 1;
+		int negative = rMode.invert?-1:1;
 		if (basic < 0){
 			basic *= -1;
 			negative = -1;
@@ -128,7 +128,7 @@ public class AdvancedJoystick extends Joystick{
 	 *sets joystick modes to basic values (direct input) 
 	 **/
 	public void basicMode(){
-		setLinearMode(0,1,.05,false);
+		setLinearMode(0,1,1,0,false);
 		setRotationalMode(.1,1,.8,.2,false);
 	}
 }

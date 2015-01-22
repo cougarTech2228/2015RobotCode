@@ -16,12 +16,11 @@ public class Robot extends IterativeRobot {
 	
 	DriveBase drive;
 	PowerDistributionPanel panel;
-	Logger logger;
 	
     public void robotInit() {
     	panel = new PowerDistributionPanel();
     	drive = new DriveBase(0/*joy*/, 12/*BR*/, 13/*BL*/, 10/*FL*/, 11/*FR*/);
-    	logger = new Logger();
+    	Logger.setUpFile();
     }
 
     /**
@@ -41,7 +40,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	panel.clearStickyFaults();
     	drive.mecanumDrive();
-    	logger.log("1", drive.panel, 1000);
+    	Logger.log("1", drive.panel, 1000);
     }
     
     /**
