@@ -2,15 +2,18 @@ package org.usfirst.frc.team2228.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-//sorry no javadoc yet
+/**
+ *A Class extending joystick meant for modifying how input is viewed
+ *
+ *@param rMode settings for modifying rotation input
+ *@param lMode settings for modifying rotation input
+ **/
 
 public class AdvancedJoystick extends Joystick{
 	double rotation = 0;
 	
 	Mode rMode;
 	Mode lMode;
-	
-	boolean invert = false;
 	
 	public AdvancedJoystick(int port){
 		super(port);
@@ -91,7 +94,15 @@ public class AdvancedJoystick extends Joystick{
 		
 		return true;
 	}
-	
+	/**
+	 * sets the rotation modes
+	 *
+	 * @param min all joystick values up to this will map to zero (range 0-1)
+	 * @param max all joystick values past this will map to <limit> (range 0-1)
+	 * @param limit the max value for the magnitude (range 0-1)
+	 * @param curvature the about of curve on the input to out put graph (range 0-.28)
+	  *@param invert whether or not to invert the joystick
+	 **/
 	public boolean setRotationalMode(double min, double max, double limit, double curvature, boolean invert){
 		if(min > max || min < 0 || max > 1 || limit < 0 || curvature > .29){
 			return false;
@@ -105,14 +116,19 @@ public class AdvancedJoystick extends Joystick{
 		
 		return true;
 	}
-	
+	/**
+	 *sets joystick modes to default values 
+	 **/
 	public void defaultMode(){
 		setLinearMode(0,.95,1,.05,false);
 		setRotationalMode(.1,1,.8,.2,false);
 	}
 	
+	/**
+	 *sets joystick modes to basic values (direct input) 
+	 **/
 	public void basicMode(){
-//		setLinearMode(0,1,.05,false);
+		setLinearMode(0,1,.05,false);
 		setRotationalMode(.1,1,.8,.2,false);
 	}
 }
