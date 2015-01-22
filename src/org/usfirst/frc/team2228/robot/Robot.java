@@ -40,7 +40,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	panel.clearStickyFaults();
     	drive.mecanumDrive();
-    	Logger.log("1", drive.panel, 1000);
+    	Logger.log("DriveVoltage: " + drive.panel.getTemperature());
     }
     
     /**

@@ -14,7 +14,7 @@ public class DriveBase{
     Wheel wheelBR;
 	Wheel wheelFL;
     Wheel wheelFR;
-    double panel;
+    PowerDistributionPanel panel;
 	
 	double maxSpeed = 60; //in rpm
 	int COUNTS_PER_REV;
@@ -23,7 +23,7 @@ public class DriveBase{
     	joy = new AdvancedJoystick(joyPort);		       
 		joy.defaultMode();
         
-		panel = new PowerDistributionPanel().getTotalPower();
+		panel = new PowerDistributionPanel();
 		
         wheelFR = new Wheel(fR, COUNTS_PER_REV, "front right");
         wheelFL = new Wheel(fL, COUNTS_PER_REV, "front left");        

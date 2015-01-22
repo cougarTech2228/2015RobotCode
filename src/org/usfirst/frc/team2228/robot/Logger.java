@@ -36,27 +36,39 @@ public class Logger{
 	public static void setUpFile(){
 		String date = dateScrub(new Date().toString());
 		file = new File("/U/Data" + date + ".txt");
-	}
-	
-	public static void log(String s, double inP, int howOften){
-			long timePassed = System.currentTimeMillis() - lastTimeILogged;
-			if(timePassed > howOften){
-				lastTimeILogged = System.currentTimeMillis();
-
-				String time = timeScrub((int)(Timer.getFPGATimestamp()-initialTime));				
-				String content = time + " >>> POWER USAGE: " + inP;
-				
-				log(content);
+		
+		// if file doesn't exists, then create it
+		if (!file.exists()) {
+			try
+			{
+				file.createNewFile();
 			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static void log(String message){
-		try (FileOutputStream fop = new FileOutputStream(file, true)) {
-			
-			// if file doesn't exists, then create it
-			if (!file.exists()) {
-				file.createNewFile();
+			long timePassed = System.currentTimeMillis() - lastTimeILogged;
+			if(timePassed > 1000){
+				lastTimeILogged = System.currentTimeMillis();
+
+				StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+				String module = stack[-2].getClassName();
+				
+				String time = timeScrub((int)(Timer.getFPGATimestamp()-initialTime));
+				
+				String content = time + " " + module + " >>> " + message; 
+				
+				printf(content);
 			}
+	}
+	
+	public static void printf(String message){
+		try (FileOutputStream fop = new FileOutputStream(file, true)) {
 			
 			// get the content in bytes
 			byte[] contentInBytes = message.getBytes();
@@ -67,7 +79,7 @@ public class Logger{
 			fop.close();
 			
 			System.out.println("Done");
- 
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
