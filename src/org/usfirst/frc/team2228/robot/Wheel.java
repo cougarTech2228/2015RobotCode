@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @param name			the name for this wheel ex)"front right"
  * @param pPID			pid values for positional control
  * @param sPID			pid values for speed control
+ * @param ramp 			the rate at which the jaguar is speed up (percent per second), defaults to one
+ * @param minRamp 		the update function will always increase the motor speed at least this much
+ * @param maxCurrent 	any current value output by the jaguar which exceeds this value will be logged
 **/
 public class Wheel extends CANJaguar{
 	public int port;		//CAN id
@@ -25,6 +28,13 @@ public class Wheel extends CANJaguar{
 	
 	public double[] pPID = {1,.01,0};	//pid values for positional control
 	public double[] sPID = {1,.01,0};	//pid values for speed control
+	
+	public double ramp = 1;
+	public minRamp = .01;
+	public maxCurrent = 100;
+	
+	private double value;
+	private double target;
 
 	public Wheel(int port, int encoderCPR, String name){
 		super(port);
@@ -65,10 +75,12 @@ public class Wheel extends CANJaguar{
 	 *
 	 * @param revs number of revs to turn
 	 **/
-	public void move(double revs){
+	public void moveRotations(double revs){
 		if(this.getControlMode().equals(CANJaguar.ControlMode.Position)){
 			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, pPID[0], pPID[1], pPID[2]);
 			this.enableControl();
+			this.value = this.getPosition();
+			SmartDashboard.putNumber(name + ": mode", "position");
 		}
 
 		if(invert){
@@ -77,6 +89,8 @@ public class Wheel extends CANJaguar{
 		
 		//push new position to jaguar
 		revs += this.getPosition();
+
+		SmartDashboard.putNumber(name, revs);
 		
 		set(revs);
 	}
@@ -87,10 +101,12 @@ public class Wheel extends CANJaguar{
 	 *
 	 * @param speed rate aft which the wheel will turn in revs per minute
 	 **/	
-	public void drive(double speed){
+	public void setSpeed(double speed){
 		if(this.getControlMode().equals(CANJaguar.ControlMode.Speed)){
+			this.value = this.getSpeed();
 			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, sPID[0], sPID[1], sPID[2]);
 			this.enableControl();
+			SmartDashboard.putNumber(name + ": mode", "speed");
 		}
 		
 		SmartDashboard.putNumber(name, speed);
@@ -109,10 +125,12 @@ public class Wheel extends CANJaguar{
 	 *
 	 * @param volts percent voltage to drive the motor
 	 **/
-	public void driveVoltage(double volts){
+	public void setVoltage(double volts){
 		if(this.getControlMode().equals(CANJaguar.ControlMode.PercentVbus)){
-			this.setPercentMode();
+			this.value = this.getOutputVoltage();
+			this.setPercentMode(kQuadEncoder, encoderCPR);
 			this.enableControl();
+			SmartDashboard.putNumber(name + ": mode", "voltage");
 		}
 		
 		SmartDashboard.putNumber(name, volts);
@@ -123,6 +141,41 @@ public class Wheel extends CANJaguar{
 		
 		//push new motor voltages to the Jaguars
 		this.set(volts);
+	}
+	
+	/** 
+	  * sets the CANJaguar value
+	  *
+	  * @see CANJaguar.set(double value)
+	  * @param value the value to run the jaguars at
+	  **/
+	public void set(double value){
+		this.target = value;
+		super.set(this.value);
+	}
+	
+	/**
+	 * updates the motor to the new speed based on this.ramp
+	 *
+	 *@param time time passed since last call to update (in seconds)
+	 **/
+	public void update(double time){
+		if(this.getOutputCurrent() > maxCurrent){
+			Logger.log("Maximum Current Exceeded"); 
+		}
+
+		//constant:
+		//double increment = Math.sign(target-value)*ramp*time;		
+		
+		//percent based:
+		double increment = (target-value)*time*ramp;
+		
+		if(increment < minRamp){
+			increment = Math.max(minRamp, target-value);
+		}
+		
+		value += increment;
+		super.set(value);
 	}
 	
 	/**
