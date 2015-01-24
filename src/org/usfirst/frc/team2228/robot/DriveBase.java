@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2228.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -9,7 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveBase{
     AdvancedJoystick joy;
-    
+    //Joystick joy;
+	
     Wheel wheelBL;
     Wheel wheelBR;
 	Wheel wheelFL;
@@ -20,8 +22,9 @@ public class DriveBase{
 	int COUNTS_PER_REV;
 	
     public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
+    	//joy = new Joystick(joyPort);
     	joy = new AdvancedJoystick(joyPort);		       
-		joy.defaultMode();
+		joy.setBypass(true);
         
 		panel = new PowerDistributionPanel();
 		
@@ -42,11 +45,11 @@ public class DriveBase{
     	
     	//get mag. dir. and rot. from the joystick
     	lMag = joy.getMagnitude();
-    	dir = joy.getDirectionRadians();
+    	dir = -joy.getDirectionRadians()+Math.PI;
     	rotate = joy.getTwist();
     	
     	SmartDashboard.putNumber("angle", Math.toDegrees(dir));
-    	SmartDashboard.putNumber("rotate", rotate);
+    	SmartDashboard.putNumber("rotate", rotate/5);
     	SmartDashboard.putNumber("magnitude", lMag);
 
     	//set each motors percent speed based on the direction, magnetude and velocity
@@ -62,11 +65,11 @@ public class DriveBase{
 		wheelBR.drive(v3*maxSpeed);
 		wheelBL.drive(v4*maxSpeed);
 		*/
-    	/*
+    	
     	wheelFR.driveVoltage(v1);
 		wheelFL.driveVoltage(v2);
 		wheelBR.driveVoltage(v3);
 		wheelBL.driveVoltage(v4);
-		*/
+		
     }
 }

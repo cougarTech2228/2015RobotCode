@@ -14,6 +14,8 @@ public class AdvancedJoystick extends Joystick{
 	
 	Mode rMode;
 	Mode lMode;
+	
+	boolean bypass = false;
 
 	public AdvancedJoystick(int port){
 		super(port);
@@ -27,6 +29,10 @@ public class AdvancedJoystick extends Joystick{
 	
 	public double getMagnitude(){
 		double basic = super.getMagnitude();
+		if(bypass){
+			return basic;
+		}
+		
 		int negative = 1;
 		if (basic < 0){
 			basic *= -1;
@@ -55,6 +61,11 @@ public class AdvancedJoystick extends Joystick{
 	
 	public double getTwist(){
 		double basic = super.getTwist();
+		
+		if(bypass){
+			return basic;
+		}
+		
 		int negative = rMode.invert?-1:1;
 		if (basic < 0){
 			basic *= -1;
@@ -129,7 +140,11 @@ public class AdvancedJoystick extends Joystick{
 	 **/
 	public void basicMode(){
 		setLinearMode(0,1,1,0,false);
-		setRotationalMode(.1,1,.8,.2,false);
+		setRotationalMode(0,1,1,0,false);
+	}
+	
+	public void setBypass(boolean bool){
+		bypass = bool;
 	}
 }
 
