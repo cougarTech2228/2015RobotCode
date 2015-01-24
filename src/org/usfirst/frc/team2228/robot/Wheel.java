@@ -30,8 +30,8 @@ public class Wheel extends CANJaguar{
 	public double[] sPID = {1,.01,0};	//pid values for speed control
 	
 	public double ramp = 1;
-	public minRamp = .01;
-	public maxCurrent = 100;
+	public double minRamp = .01;
+	public double maxCurrent = 100;
 	
 	private double value;
 	private double target;
@@ -80,7 +80,7 @@ public class Wheel extends CANJaguar{
 			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, pPID[0], pPID[1], pPID[2]);
 			this.enableControl();
 			this.value = this.getPosition();
-			SmartDashboard.putNumber(name + ": mode", "position");
+			SmartDashboard.putString(name + ": mode", "position");
 		}
 
 		if(invert){
@@ -106,7 +106,7 @@ public class Wheel extends CANJaguar{
 			this.value = this.getSpeed();
 			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, sPID[0], sPID[1], sPID[2]);
 			this.enableControl();
-			SmartDashboard.putNumber(name + ": mode", "speed");
+			SmartDashboard.putString(name + ": mode", "speed");
 		}
 		
 		SmartDashboard.putNumber(name, speed);
@@ -130,7 +130,7 @@ public class Wheel extends CANJaguar{
 			this.value = this.getOutputVoltage();
 			this.setPercentMode(kQuadEncoder, encoderCPR);
 			this.enableControl();
-			SmartDashboard.putNumber(name + ": mode", "voltage");
+			SmartDashboard.putString(name + ": mode", "voltage");
 		}
 		
 		SmartDashboard.putNumber(name, volts);
@@ -149,7 +149,7 @@ public class Wheel extends CANJaguar{
 	  * @see CANJaguar.set(double value)
 	  * @param value the value to run the jaguars at
 	  **/
-	public void set(double value){
+	public void sett(double value){
 		this.target = value;
 		super.set(this.value);
 	}

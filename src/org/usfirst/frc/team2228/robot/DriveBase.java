@@ -23,8 +23,9 @@ public class DriveBase{
 	
     public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
     	//joy = new Joystick(joyPort);
-    	joy = new AdvancedJoystick(joyPort);		       
-		joy.setBypass(true);
+    	joy = new AdvancedJoystick(joyPort);
+    	joy.basicMode();
+		joy.setBypass(false);
         
 		panel = new PowerDistributionPanel();
 		
@@ -66,10 +67,10 @@ public class DriveBase{
 		wheelBL.drive(v4*maxSpeed);
 		*/
     	
-    	wheelFR.driveVoltage(v1);
-		wheelFL.driveVoltage(v2);
-		wheelBR.driveVoltage(v3);
-		wheelBL.driveVoltage(v4);
+    	wheelFR.setVoltage(v1);
+		wheelFL.setVoltage(v2);
+		wheelBR.setVoltage(v3);
+		wheelBL.setVoltage(v4);
 		
     }
 }

@@ -43,18 +43,20 @@ public class AdvancedJoystick extends Joystick{
 			return 0;
 		}
 		else if(basic >= lMode.max){
-			return lMode.limit;
+			return lMode.limit*negative;
 		}
 		
-		basic -= lMode.min;
-		basic = basic*(lMode.max - lMode.min)/(1 - lMode.min);
+		if(lMode.curvature==0){
+			return basic;
+		}
 		
-		double r = 1 / (Math.sqrt(2)*Math.sin(2*Math.atan(1/(Math.sqrt(2)*lMode.curvature))));
-		double xc = 1/2 + (r-lMode.curvature)/Math.sqrt(2);  
-		double yc = 1/2 + (lMode.curvature-r)/Math.sqrt(2);
-
-		double output = -1*Math.sqrt(Math.pow(r, 2) - Math.pow(basic - xc , 2)) + yc;
-		output *= lMode.limit*negative;
+		//this will turn basic into a percent (out of one) from min to max
+		double linear = basic*(lMode.max - lMode.min)/(1 - lMode.min)- lMode.min;
+		
+		//the value of this input on a unit circle centered at 0,1
+		double curve = 1 + Math.sqrt(1-Math.pow(linear,2));
+		
+	    double output = curve*lMode.curvature + linear*(1-lMode.curvature)*negative;
 		
 		return output;
 	}
@@ -76,18 +78,16 @@ public class AdvancedJoystick extends Joystick{
 			return 0;
 		}
 		else if(basic >= rMode.max){
-			return rMode.limit;
+			return rMode.limit*negative;
 		}
 		
-		basic -= rMode.min;
-		basic = basic*(rMode.max - rMode.min)/(1 - rMode.min);
+		//this will turn basic into a percent (out of one) from min to max
+		double linear = basic*(rMode.max - rMode.min)/(1 - rMode.min)- rMode.min;
 		
-		double r = 1 / (Math.sqrt(2)*Math.sin(2*Math.atan(1/(Math.sqrt(2)*rMode.curvature))));
-		double xc = 1/2 + (r-rMode.curvature)/Math.sqrt(2);  
-		double yc = 1/2 + (rMode.curvature-r)/Math.sqrt(2);
-
-		double output = -1 * Math.sqrt(Math.pow(r, 2) - Math.pow(basic - xc, 2)) + yc;
-		output *= rMode.limit * negative;
+		//the value of this input on a unit circle centered at 0,1
+		double curve = 1 + Math.sqrt(1-Math.pow(linear,2));
+		
+	    double output = curve*rMode.curvature + linear*(1-rMode.curvature)*negative;
 		
 		return output;
 	}
@@ -111,7 +111,7 @@ public class AdvancedJoystick extends Joystick{
 	 * @param min all joystick values up to this will map to zero (range 0-1)
 	 * @param max all joystick values past this will map to <limit> (range 0-1)
 	 * @param limit the max value for the magnitude (range 0-1)
-	 * @param curvature the about of curve on the input to out put graph (range 0-.28)
+	 * @param curvature how curved the input to output graph for the joystick is, (percent: range 0-1)
 	  *@param invert whether or not to invert the joystick
 	 **/
 	public boolean setRotationalMode(double min, double max, double limit, double curvature, boolean invert){

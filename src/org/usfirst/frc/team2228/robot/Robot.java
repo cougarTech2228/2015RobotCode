@@ -20,7 +20,7 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	panel = new PowerDistributionPanel();
     	drive = new DriveBase(0/*joy*/, 12/*BR*/, 13/*BL*/, 10/*FL*/, 11/*FR*/);
-    	//Logger.setUpFile();
+    	Logger.setUpFile();
     }
 
     /**
