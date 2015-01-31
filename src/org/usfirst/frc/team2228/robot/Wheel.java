@@ -1,4 +1,3 @@
-
 package org.usfirst.frc.team2228.robot; 
 
 import edu.wpi.first.wpilibj.CANJaguar;
@@ -14,9 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @param name			the name for this wheel ex)"front right"
  * @param pPID			pid values for positional control
  * @param sPID			pid values for speed control
- * @param ramp 			the rate at which the jaguar is speed up (percent per second), defaults to one
- * @param minRamp 		the update function will always increase the motor speed at least this much
+ * @param ramp 			the rate at which the jaguar is speed up (units per millisecond^2)
  * @param maxCurrent 	any current value output by the jaguar which exceeds this value will be logged
+ * @param maxSpeed 		speed to drive the motors when set to 100 percent in speed mode (revs per second)
 **/
 public class Wheel extends CANJaguar{
 	public int port;		//CAN id
@@ -26,12 +25,13 @@ public class Wheel extends CANJaguar{
     
 	public boolean invert = false;
 	
-	public double[] pPID = {1,.01,0};	//pid values for positional control
-	public double[] sPID = {1,.01,0};	//pid values for speed control
+	public static double[] pPID = {1,.01,0};	//pid values for positional control
+	public static double[] sPID = {1,.01,0};	//pid values for speed control
 	
-	public double ramp = 1;
-	public double minRamp = .01;
-	public double maxCurrent = 100;
+	public static double ramp = 1/10000; 		//1.0(100%) per ten seconds(10000 milliseconds)
+	public static double maxCurrent = 100;
+	
+	public static double maxSpeed = 30;
 	
 	private double value;
 	private double target;
@@ -76,7 +76,7 @@ public class Wheel extends CANJaguar{
 	 * @param revs number of revs to turn
 	 **/
 	public void moveRotations(double revs){
-		if(this.getControlMode().equals(CANJaguar.ControlMode.Position)){
+		if( ! this.getControlMode().equals(CANJaguar.ControlMode.Position)){
 			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, pPID[0], pPID[1], pPID[2]);
 			this.enableControl();
 			this.value = this.getPosition();
@@ -89,8 +89,6 @@ public class Wheel extends CANJaguar{
 		
 		//push new position to jaguar
 		revs += this.getPosition();
-
-		SmartDashboard.putNumber(name, revs);
 		
 		set(revs);
 	}
@@ -99,48 +97,44 @@ public class Wheel extends CANJaguar{
 	 * Moves the wheel at a certain speed.
 	 * Will move the jaguar into speed mode if necessary
 	 *
-	 * @param speed rate aft which the wheel will turn in revs per minute
+	 * @param percent percent speed which the motors will be driven at
 	 **/	
-	public void setSpeed(double speed){
-		if(this.getControlMode().equals(CANJaguar.ControlMode.Speed)){
+	public void setSpeed(double percent){
+		if( ! this.getControlMode().equals(CANJaguar.ControlMode.Speed)){
 			this.value = this.getSpeed();
 			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, sPID[0], sPID[1], sPID[2]);
 			this.enableControl();
 			SmartDashboard.putString(name + ": mode", "speed");
 		}
-		
-		SmartDashboard.putNumber(name, speed);
 
 		if(invert){
-			speed *= -1;
+			percent *= -1;
 		}
 		
 		//push new motor voltages to the Jaguars
-		this.set(speed);
+		this.set(percent*maxSpeed);
 	}
 	
 	/**
-	 * Drives the motor at a certain voltage.
+	 * Drives the motor at a certain percent voltage.
 	 * Will move the jaguar into percentVBus mode if necessary
 	 *
 	 * @param volts percent voltage to drive the motor
 	 **/
-	public void setVoltage(double volts){
-		if(this.getControlMode().equals(CANJaguar.ControlMode.PercentVbus)){
+	public void setVoltage(double percent){
+		if( ! this.getControlMode().equals(CANJaguar.ControlMode.PercentVbus)){
 			this.value = this.getOutputVoltage();
 			this.setPercentMode(kQuadEncoder, encoderCPR);
 			this.enableControl();
 			SmartDashboard.putString(name + ": mode", "voltage");
 		}
-		
-		SmartDashboard.putNumber(name, volts);
 
 		if(invert){
-			volts *= -1;
+			percent *= -1;
 		}
 		
 		//push new motor voltages to the Jaguars
-		this.set(volts);
+		this.set(percent);
 	}
 	
 	/** 
@@ -149,9 +143,12 @@ public class Wheel extends CANJaguar{
 	  * @see CANJaguar.set(double value)
 	  * @param value the value to run the jaguars at
 	  **/
-	public void sett(double value){
-		this.target = value;
-		super.set(this.value);
+	public void set(double value){
+		target = value;
+		
+		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",value));
+		
+		//super.set(this.value);
 	}
 	
 	/**
@@ -168,14 +165,21 @@ public class Wheel extends CANJaguar{
 		//double increment = Math.sign(target-value)*ramp*time;		
 		
 		//percent based:
-		double increment = (target-value)*time*ramp;
+		double increment = Math.signum(target-value) * time*ramp;
 		
-		if(increment < minRamp){
-			increment = Math.max(minRamp, target-value);
+		if(this.getControlMode().equals(CANJaguar.ControlMode.Speed)){
+			increment*=maxSpeed;
+		}
+		
+		if((target-value) < increment){
+			increment = (target-value);
 		}
 		
 		value += increment;
-		super.set(value);
+		
+		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",target));
+		
+		super.set(value); 
 	}
 	
 	/**

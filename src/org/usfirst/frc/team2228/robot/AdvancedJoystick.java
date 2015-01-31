@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
  **/
 
 public class AdvancedJoystick extends Joystick{
-	double rotation = 0;
+	double rotation = Math.PI;
 	
 	Mode rMode;
 	Mode lMode;
@@ -29,6 +29,7 @@ public class AdvancedJoystick extends Joystick{
 	
 	public double getMagnitude(){
 		double basic = super.getMagnitude();
+		
 		if(bypass){
 			return basic;
 		}
@@ -42,23 +43,20 @@ public class AdvancedJoystick extends Joystick{
 		if(basic <= lMode.min){
 			return 0;
 		}
+		
 		else if(basic >= lMode.max){
 			return lMode.limit*negative;
 		}
 		
-		if(lMode.curvature==0){
-			return basic;
-		}
-		
 		//this will turn basic into a percent (out of one) from min to max
-		double linear = basic*(lMode.max - lMode.min)/(1 - lMode.min)- lMode.min;
+		double linear = (basic - lMode.min)/(lMode.max-lMode.min); 
 		
 		//the value of this input on a unit circle centered at 0,1
-		double curve = 1 + Math.sqrt(1-Math.pow(linear,2));
+		double curve = 1 + -Math.sqrt(1-Math.pow(linear,2));
 		
-	    double output = curve*lMode.curvature + linear*(1-lMode.curvature)*negative;
+	    double output = (curve*lMode.curvature + linear*(1-lMode.curvature))*negative*lMode.limit;
 		
-		return output;
+	    return output;
 	}
 	
 	public double getTwist(){
@@ -77,23 +75,24 @@ public class AdvancedJoystick extends Joystick{
 		if(basic <= rMode.min){
 			return 0;
 		}
+		
 		else if(basic >= rMode.max){
 			return rMode.limit*negative;
 		}
 		
 		//this will turn basic into a percent (out of one) from min to max
-		double linear = basic*(rMode.max - rMode.min)/(1 - rMode.min)- rMode.min;
+		double linear = (basic - rMode.min)/(rMode.max-rMode.min);
 		
 		//the value of this input on a unit circle centered at 0,1
-		double curve = 1 + Math.sqrt(1-Math.pow(linear,2));
+		double curve = 1 + -Math.sqrt(1-Math.pow(linear,2));
 		
-	    double output = curve*rMode.curvature + linear*(1-rMode.curvature)*negative;
-		
+	    double output = (curve*rMode.curvature + linear*(1-rMode.curvature))*negative*rMode.limit;
+	    
 		return output;
 	}
 	
 	public boolean setLinearMode(double min, double max, double limit, double curvature, boolean invert){
-		if(min > max || min < 0 || max > 1 || limit < 0 || curvature > .29){
+		if(min > max || min < 0 || max > 1 || limit < 0 || curvature > 1 || curvature < 0){
 			return false;
 		}
 		
@@ -115,7 +114,7 @@ public class AdvancedJoystick extends Joystick{
 	  *@param invert whether or not to invert the joystick
 	 **/
 	public boolean setRotationalMode(double min, double max, double limit, double curvature, boolean invert){
-		if(min > max || min < 0 || max > 1 || limit < 0 || curvature > .29){
+		if(min > max || min < 0 || max > 1 || limit < 0 || curvature > 1 || curvature < 0){
 			return false;
 		}
 		
@@ -127,12 +126,13 @@ public class AdvancedJoystick extends Joystick{
 		
 		return true;
 	}
+	
 	/**
 	 *sets joystick modes to default values 
 	 **/
 	public void defaultMode(){
-		setLinearMode(0,.95,1,.05,false);
-		setRotationalMode(.1,1,.8,.2,false);
+		setLinearMode(.1,.9,1,.2,false);
+		setRotationalMode(.3,1,.65,.8,false);
 	}
 	
 	/**
@@ -151,7 +151,7 @@ public class AdvancedJoystick extends Joystick{
 class Mode{	
 	public double max = 1;
 	public double min = 0;
-	public double limit = 1;
+	public double limit = .5;
 	public double curvature = 0;
 	public boolean invert = false;
 	
@@ -160,7 +160,7 @@ class Mode{
 	}
 	
 	public Mode(double min, double max, double limit, double curvature, boolean invert){
-		if(min > max || min < 0 || max > 1 || limit < 0 || curvature > .29){
+		if(min > max || min < 0 || max > 1 || limit < 0 || curvature > 1){
 			return;
 		}
 		

@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class DriveBase{
-    AdvancedJoystick joy;
-    //Joystick joy;
+    //AdvancedJoystick joy;
+    Joystick joy;
 	
     Wheel wheelBL;
     Wheel wheelBR;
@@ -18,15 +18,14 @@ public class DriveBase{
     Wheel wheelFR;
     PowerDistributionPanel panel;
 	
-	double maxSpeed = 60; //in rpm
 	int COUNTS_PER_REV;
 	
     public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
-    	//joy = new Joystick(joyPort);
-    	joy = new AdvancedJoystick(joyPort);
-    	joy.basicMode();
-		joy.setBypass(false);
-        
+    	joy = new Joystick(joyPort);
+    	//joy = new AdvancedJoystick(joyPort);
+    	//joy.defaultMode();
+		//joy.setBypass(true);
+		
 		panel = new PowerDistributionPanel();
 		
         wheelFR = new Wheel(fR, COUNTS_PER_REV, "front right");
@@ -38,19 +37,19 @@ public class DriveBase{
 		wheelBL.setInvert(true);
     }
    
-    public void mecanumDrive(){    	
+    public void mecanumDrive(double time){    	
     	double lMag;//linear magnitude (-1 to 1)
     	double dir;//direction (in radians)
     	double rotate;//rotational magnitude (-1 to 1)
     	double v1,v2,v3,v4;
-    	
+    	    	
     	//get mag. dir. and rot. from the joystick
     	lMag = joy.getMagnitude();
-    	dir = -joy.getDirectionRadians()+Math.PI;
+    	dir = -joy.getDirectionRadians();
     	rotate = joy.getTwist();
     	
     	SmartDashboard.putNumber("angle", Math.toDegrees(dir));
-    	SmartDashboard.putNumber("rotate", rotate/5);
+    	SmartDashboard.putNumber("rotate", rotate);
     	SmartDashboard.putNumber("magnitude", lMag);
 
     	//set each motors percent speed based on the direction, magnetude and velocity
@@ -71,6 +70,8 @@ public class DriveBase{
 		wheelFL.setVoltage(v2);
 		wheelBR.setVoltage(v3);
 		wheelBL.setVoltage(v4);
+		
+		wheelBL.update(time);
 		
     }
 }

@@ -14,6 +14,10 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
 	
+	double time;
+	double oldTime = 0;
+	double newTime = 0;
+	
 	DriveBase drive;
 	PowerDistributionPanel panel;
 	
@@ -38,8 +42,12 @@ public class Robot extends IterativeRobot {
     }
     
     public void teleopPeriodic() {
+    	newTime = Timer.getFPGATimestamp();
+    	time = newTime - oldTime;
+    	oldTime = newTime;
+    	
     	panel.clearStickyFaults();
-    	drive.mecanumDrive();
+    	drive.mecanumDrive(time);
     	//Logger.log("DriveVoltage: " + drive.panel.getTemperature());
     }
     
