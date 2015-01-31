@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  *@param rMode settings for modifying rotation input
  *@param lMode settings for modifying rotation input
+ *@param bypass set this flag to true to disable input mapping 
  **/
 
 public class AdvancedJoystick extends Joystick{
@@ -17,16 +18,31 @@ public class AdvancedJoystick extends Joystick{
 	
 	boolean bypass = false;
 
+	/**
+	 * creates an Advanced Joystick on port <port>
+	 * 
+	 * @param port the index of the joystick
+	 */
 	public AdvancedJoystick(int port){
 		super(port);
 		rMode = new Mode();
 		lMode = new Mode();
 	}
 	
+	/**
+	 * get the direction of the joystick
+	 * 
+	 * @see edu.wpi.first.wpilibj.Joystick#getDirectionRadians()
+	 **/
 	public double getDirectionRadians(){
 		return super.getDirectionRadians() + rotation + (lMode.invert ? Math.PI : 0);
 	}
 	
+	/**
+	 * get the mapped magnitude of the joystick
+	 * 
+	 * @see edu.wpi.first.wpilibj.Joystick#getMagnitude()
+	 */
 	public double getMagnitude(){
 		double basic = super.getMagnitude();
 		
@@ -59,6 +75,11 @@ public class AdvancedJoystick extends Joystick{
 	    return output;
 	}
 	
+	/*
+	 * get the mapped rotational magnitude of the joystick
+	 * 
+	 * @see edu.wpi.first.wpilibj.Joystick#getTwist()
+	 */
 	public double getTwist(){
 		double basic = super.getTwist();
 		
@@ -91,6 +112,15 @@ public class AdvancedJoystick extends Joystick{
 		return output;
 	}
 	
+	/**
+	 * sets the linear modes
+	 *
+	 * @param min all joystick values up to this will map to zero (range 0-1)
+	 * @param max all joystick values past this will map to <limit> (range 0-1)
+	 * @param limit the max value for the magnitude (range 0-1)
+	 * @param curvature how curved the input to output graph for the joystick is, (percent: range 0-1)
+	  *@param invert whether or not to invert the joystick
+	 **/
 	public boolean setLinearMode(double min, double max, double limit, double curvature, boolean invert){
 		if(min > max || min < 0 || max > 1 || limit < 0 || curvature > 1 || curvature < 0){
 			return false;
@@ -104,6 +134,7 @@ public class AdvancedJoystick extends Joystick{
 		
 		return true;
 	}
+	
 	/**
 	 * sets the rotation modes
 	 *
@@ -143,6 +174,11 @@ public class AdvancedJoystick extends Joystick{
 		setRotationalMode(0,1,1,0,false);
 	}
 	
+	/**
+	 * set the bypass flag
+	 * 
+	 * @param bool new value for bypass
+	 */
 	public void setBypass(boolean bool){
 		bypass = bool;
 	}
