@@ -144,6 +144,11 @@ public class Wheel extends CANJaguar{
 	  * @param value the value to run the jaguars at
 	  **/
 	public void set(double value){
+		SmartDashboard.putString(name, String.format("%.2f",value));
+		super.set(double value)
+	}  
+	  
+	public void target(double value){
 		target = value;
 		
 		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",value));
