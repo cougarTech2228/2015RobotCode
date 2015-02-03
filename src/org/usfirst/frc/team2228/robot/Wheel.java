@@ -1,6 +1,6 @@
 package org.usfirst.frc.team2228.robot; 
 
-import edu.wpi.first.wpilibj.CANJaguar;
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @param maxCurrent 	any current value output by the jaguar which exceeds this value will be logged
  * @param maxSpeed 		speed to drive the motors when set to 100 percent in speed mode (revs per second)
 **/
-public class Wheel extends CANJaguar{
+public class Wheel extends CANTalon{
 	public int port;		//CAN id
 	public int encoderCPR;	// counts per revolution
 	
@@ -28,7 +28,7 @@ public class Wheel extends CANJaguar{
 	public static double[] pPID = {1,.01,0};	//pid values for positional control
 	public static double[] sPID = {1,.01,0};	//pid values for speed control
 	
-	public static double ramp = 1/10000; 		//1.0(100%) per ten seconds(10000 milliseconds)
+	public static final RAMP = 1; 			//100% percent per seconds
 	public static double maxCurrent = 100;
 	
 	public static double maxSpeed = 30;
@@ -41,6 +41,7 @@ public class Wheel extends CANJaguar{
 		this.port = port;
 		this.encoderCPR = encoderCPR;
 		this.name = name;
+		this.setVoltageRampRate(RAMP * this.getBusVoltage());
 	}
 		
 	/**
@@ -148,45 +149,6 @@ public class Wheel extends CANJaguar{
 		super.set(double value)
 	}  
 	  
-	public void target(double value){
-		target = value;
-		
-		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",value));
-		
-		//super.set(this.value);
-	}
-	
-	/**
-	 * updates the motor to the new speed based on this.ramp
-	 *
-	 *@param time time passed since last call to update (in seconds)
-	 **/
-	public void update(double time){
-		if(this.getOutputCurrent() > maxCurrent){
-			Logger.log("Maximum Current Exceeded"); 
-		}
-
-		//constant:
-		//double increment = Math.sign(target-value)*ramp*time;		
-		
-		//percent based:
-		double increment = Math.signum(target-value) * time*ramp;
-		
-		if(this.getControlMode().equals(CANJaguar.ControlMode.Speed)){
-			increment*=maxSpeed;
-		}
-		
-		if((target-value) < increment){
-			increment = (target-value);
-		}
-		
-		value += increment;
-		
-		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",target));
-		
-		super.set(value); 
-	}
-	
 	/**
 	 * Will set whether or  not to invert all drive signals to this wheel
 	 *
