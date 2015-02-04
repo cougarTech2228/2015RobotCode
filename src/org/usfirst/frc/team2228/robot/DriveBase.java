@@ -79,4 +79,19 @@ public class DriveBase{
 		wheelBL.setVoltage(v4);
     	}
     }
+    
+    public void autonomous(int mode){
+    	if(mode == 1){
+    		wheelFR.setPosition(10);
+		wheelFL.setPosition(10);
+		wheelBR.setPosition(10);
+		wheelBL.setPosition(10);
+		
+		if (wheelFR.getPosition() < 10){
+			return;
+		}
+		
+		//do whatevers next
+    	}
+    }
 }
