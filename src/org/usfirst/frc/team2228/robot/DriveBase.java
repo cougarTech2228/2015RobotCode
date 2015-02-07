@@ -59,19 +59,15 @@ public class DriveBase{
     	v4 = lMag*Math.sin(dir + (Math.PI/4)) - rotate;
     	
     	//push new motor speed to the Jaguars
-    	/*
-    	wheelFR.drive(v1*maxSpeed);
-		wheelFL.drive(v2*maxSpeed);
-		wheelBR.drive(v3*maxSpeed);
-		wheelBL.drive(v4*maxSpeed);
-		*/
     	
     	wheelFR.setVoltage(v1);
 		wheelFL.setVoltage(v2);
 		wheelBR.setVoltage(v3);
 		wheelBL.setVoltage(v4);
 		
+		wheelFL.update(time);
+		wheelFL.update(time);
+		wheelBR.update(time);
 		wheelBL.update(time);
-		
     }
 }
