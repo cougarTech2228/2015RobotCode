@@ -22,6 +22,8 @@ public class DriveBase{
     
     public int COUNTS_PER_REV = 250;
     
+    public static int maxSpeed;
+    
 	
     public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
     	//joy = new Joystick(joyPort);
@@ -41,8 +43,8 @@ public class DriveBase{
     }
    
     public void mecanumDrive(double time){
-    	if(joy.getButton(FALLBACK_BUTTON) == true){
-    		voltageDrive = true;
+    	if(joy.getRawButton(FALLBACK_BUTTON) == true){
+    		voltageDrive_flg = true;
     	}
     	
     	double lMag;//linear magnitude (-1 to 1)

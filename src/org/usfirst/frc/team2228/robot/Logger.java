@@ -56,11 +56,13 @@ public class Logger{
 			if(timePassed > 1000){
 				lastTimeILogged = System.currentTimeMillis();
 
+				String module;
+				
 				try{
 					StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-					String module = stack[stack.length-2].getClassName();
+					module = stack[1].getClassName();
 				}catch(Exception e){
-					String module = "";
+					module = "";
 				}
 				String time = timeScrub((int)(Timer.getFPGATimestamp()-initialTime));
 				
