@@ -23,8 +23,9 @@ public class Wheel extends CANJaguar{
 	public String name;			//name for this wheel 
     
 	public boolean invert = false;
+	public boolean enabled = true;
 	
-	public static double ramp = 1/10000; 		//1.0(100%) per ten seconds(10000 milliseconds)
+	public static double ramp = 8; 		//time constant (percent (out of 1) per second)
 	public static double maxCurrent = 100;
 	
 	private double value;
@@ -65,16 +66,15 @@ public class Wheel extends CANJaguar{
 	  * @param value the value to run the jaguars at
 	  **/
 	public void set(double value){
-		SmartDashboard.putString(name, String.format("%.2f",value));
-		super.set(value);
+		if(enabled){
+			SmartDashboard.putString(name, String.format("%.2f",value));
+			super.set(value);
+		}
 	}  
 	  
 	public void target(double value){
 		target = value;
-		
-		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",value));
-		
-		//super.set(this.value);
+		//set(this.value);
 	}
 	
 	/**
@@ -87,21 +87,22 @@ public class Wheel extends CANJaguar{
 			Logger.log("Maximum Current Exceeded"); 
 		}
 
-		//constant:
-		//double increment = Math.sign(target-value)*ramp*time;		
-		
 		//percent based:
-		double increment = Math.signum(target-value) * time*ramp;
+		double increment = Math.signum(target-value) * time * ramp;
 		
-		if((target-value) < increment){
-			increment = (target-value);
+		//this will check if increment will overshoot the target
+		if(Math.abs(target-value) < Math.abs(increment)){
+			//and if so the new value will be set to target
+			value = target;
+		}else{
+			value += increment;	
 		}
 		
-		value += increment;
+		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",target) + " " + increment);
 		
-		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",target));
-		
-		super.set(value); 
+		if(enabled){
+			super.set(value);
+		}
 	}
 	
 	/**

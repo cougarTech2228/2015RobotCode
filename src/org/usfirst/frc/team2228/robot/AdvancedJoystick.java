@@ -14,16 +14,16 @@ public class AdvancedJoystick extends Joystick{
 	double rotation = Math.PI;
 	
 	public double rMode_max = 1;
-	public double rMode_min = 0;
-	public double rMode_limit = .5;
-	public double rMode_curvature = 0;
+	public double rMode_min = .2;
+	public double rMode_limit = 1;
+	public double rMode_curvature = .5;
 	public boolean rMode_invert = false;
 	
 	public double lMode_max = 1;
 	public double lMode_min = 0;
 	public double lMode_maxLimit = 1;
 	public double lMode_minLimit = .1;
-	public double lMode_curvature = 0;
+	public double lMode_curvature = .2;
 	public boolean lMode_invert = false;
 	
 	boolean bypass = false;
@@ -34,7 +34,7 @@ public class AdvancedJoystick extends Joystick{
 	 * @param port the index of the joystick
 	 */
 	public AdvancedJoystick(int port){
-		super(port);
+		super(port);  
 	}
 	
 	/**

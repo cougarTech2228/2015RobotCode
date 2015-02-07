@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class DriveBase{
-    //AdvancedJoystick joy;
-    Joystick joy;
+    AdvancedJoystick joy;
+    //Joystick joy;
 	
     Wheel wheelBL;
     Wheel wheelBR;
@@ -21,10 +21,10 @@ public class DriveBase{
 	int COUNTS_PER_REV;
 	
     public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
-    	joy = new Joystick(joyPort);
-    	//joy = new AdvancedJoystick(joyPort);
-    	//joy.defaultMode();
-		//joy.setBypass(true);
+    	//joy = new Joystick(joyPort);
+    	joy = new AdvancedJoystick(joyPort);
+    	joy.defaultMode();
+		joy.setBypass(false);
 		
 		panel = new PowerDistributionPanel();
 		
@@ -35,9 +35,26 @@ public class DriveBase{
 		
 		wheelFL.setInvert(true);
 		wheelBL.setInvert(true);
+		
+		//wheelFL.enabled = false;
+		wheelFR.enabled = false;
+		wheelBL.enabled = false;
+		wheelBR.enabled = false;
     }
    
-    public void mecanumDrive(double time){    	
+    public void mecanumDrive(double time){
+    	if(joy.getRawButton(6)){
+    		joy.rMode_limit = 0;
+    	}else if(joy.getRawButton(7)){
+    		joy.rMode_limit = .3;
+    	}else if(joy.getRawButton(8)){
+    		joy.rMode_limit = .6;
+    	}else if(joy.getRawButton(9)){
+    		joy.rMode_limit = .9;
+    	}
+    		
+    	
+    	
     	double lMag;//linear magnitude (-1 to 1)
     	double dir;//direction (in radians)
     	double rotate;//rotational magnitude (-1 to 1)
@@ -66,7 +83,7 @@ public class DriveBase{
 		wheelBL.setVoltage(v4);
 		
 		wheelFL.update(time);
-		wheelFL.update(time);
+		wheelFR.update(time);
 		wheelBR.update(time);
 		wheelBL.update(time);
     }

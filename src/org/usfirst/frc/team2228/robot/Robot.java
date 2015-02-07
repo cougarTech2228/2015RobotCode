@@ -4,6 +4,7 @@ package org.usfirst.frc.team2228.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * MainClass
@@ -45,6 +46,8 @@ public class Robot extends IterativeRobot {
     	newTime = Timer.getFPGATimestamp();
     	time = newTime - oldTime;
     	oldTime = newTime;
+    	
+    	SmartDashboard.putNumber("time", time);
     	
     	panel.clearStickyFaults();
     	drive.mecanumDrive(time);
