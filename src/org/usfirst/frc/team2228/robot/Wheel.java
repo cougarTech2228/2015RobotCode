@@ -55,19 +55,6 @@ public class Wheel extends CANJaguar{
 		this.pPID[1] = i;
 		this.pPID[2] = d;
 	}
-
-	/**
-	 * sets the pid values for speed control
-	 *
-	 * @param p	positional gain
-	 * @param i	integral gain
-	 * @param d	derivative gain
-	 **/	
-	public void setPidVelocital(double p, double i, double d){
-		this.pPID[0] = p;
-		this.pPID[1] = i;
-		this.pPID[2] = d;		
-	}
 	
 	/**
 	 * Moves the wheel a certain number of revolution.
@@ -92,28 +79,6 @@ public class Wheel extends CANJaguar{
 		
 		set(revs);
 	}
-
-	/**
-	 * Moves the wheel at a certain speed.
-	 * Will move the jaguar into speed mode if necessary
-	 *
-	 * @param percent percent speed which the motors will be driven at
-	 **/	
-	public void setSpeed(double percent){
-		if( ! this.getControlMode().equals(CANJaguar.ControlMode.Speed)){
-			this.value = this.getSpeed();
-			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, sPID[0], sPID[1], sPID[2]);
-			this.enableControl();
-			SmartDashboard.putString(name + ": mode", "speed");
-		}
-
-		if(invert){
-			percent *= -1;
-		}
-		
-		//push new motor voltages to the Jaguars
-		this.set(percent*maxSpeed);
-	}
 	
 	/**
 	 * Drives the motor at a certain percent voltage.
@@ -137,6 +102,17 @@ public class Wheel extends CANJaguar{
 		this.set(percent);
 	}
 	
+	public void setPosition(double position){
+		if( ! this.getControlMode().equals(CANJaguar.ControlMode.Position)){
+			this.setPositionMode(CANJaguar.kQuadEncoder, encoderCPR, pPID[0], pPID[1], pPID[2]);
+			this.enableControl();
+			this.value = this.getPosition();
+			SmartDashboard.putString(name + ": mode", "position");
+		}
+		
+		this.set(position);
+	}
+	
 	/** 
 	  * sets the CANJaguar value
 	  *
@@ -145,7 +121,7 @@ public class Wheel extends CANJaguar{
 	  **/
 	public void set(double value){
 		SmartDashboard.putString(name, String.format("%.2f",value));
-		super.set(double value)
+		super.set(value);
 	}  
 	  
 	public void target(double value){

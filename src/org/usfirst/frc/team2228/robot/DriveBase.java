@@ -16,6 +16,12 @@ public class DriveBase{
     Wheel wheelBR;
 	Wheel wheelFL;
     Wheel wheelFR;
+    
+    double lastFR = 0;
+    double lastFL = 0;
+    double lastBR = 0;
+    double lastBL = 0;
+    
     PowerDistributionPanel panel;
 	
 	int COUNTS_PER_REV;
@@ -59,19 +65,27 @@ public class DriveBase{
     	v4 = lMag*Math.sin(dir + (Math.PI/4)) - rotate;
     	
     	//push new motor speed to the Jaguars
-    	/*
-    	wheelFR.drive(v1*maxSpeed);
-		wheelFL.drive(v2*maxSpeed);
-		wheelBR.drive(v3*maxSpeed);
-		wheelBL.drive(v4*maxSpeed);
-		*/
+    	lastFR += v1*Wheel.maxSpeed*time;
+    	lastFL += v2*Wheel.maxSpeed*time;
+    	lastBR += v3*Wheel.maxSpeed*time;
+    	lastBL += v4*Wheel.maxSpeed*time;
     	
+    	if(Math.abs(lastFR - wheelFR.getPosition()) > 777){
+    		//TODO
+    	}
+    	
+    	wheelFR.setPosition(lastFR);
+		wheelFL.setPosition(lastFL);
+		wheelBR.setPosition(lastBR);
+		wheelBL.setPosition(lastBL);
+    	
+		/*
     	wheelFR.setVoltage(v1);
 		wheelFL.setVoltage(v2);
 		wheelBR.setVoltage(v3);
 		wheelBL.setVoltage(v4);
-		
-		wheelBL.update(time);
+		*/
+		//wheelBL.update(time);
 		
     }
 }
