@@ -16,10 +16,8 @@ public class DriveBase{
     Wheel wheelBR;
 	Wheel wheelFL;
     Wheel wheelFR;
-    PowerDistributionPanel panel;
 	
-	int COUNTS_PER_REV;
-	double direction = Math.PI;
+	double direction = Parameters.initialDirection;
 	
 	
     public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
@@ -28,12 +26,10 @@ public class DriveBase{
     	joy.defaultMode();
 		joy.setBypass(false);
 		
-		panel = new PowerDistributionPanel();
-		
-        wheelFR = new Wheel(fR, COUNTS_PER_REV, "front right");
-        wheelFL = new Wheel(fL, COUNTS_PER_REV, "front left");        
-        wheelBR = new Wheel(bR, COUNTS_PER_REV, "back right");        
-		wheelBL = new Wheel(bL, COUNTS_PER_REV, "back left");
+        wheelFR = new Wheel(fR, Parameters.COUNTS_PER_REV, "front right");
+        wheelFL = new Wheel(fL, Parameters.COUNTS_PER_REV, "front left");        
+        wheelBR = new Wheel(bR, Parameters.COUNTS_PER_REV, "back right");        
+		wheelBL = new Wheel(bL, Parameters.COUNTS_PER_REV, "back left");
 		
 		wheelFL.setInvert(true);
 		wheelBL.setInvert(true);
@@ -45,17 +41,17 @@ public class DriveBase{
     }
    
     public void mecanumDrive(double time){
-    	if(joy.getRawButton(7)){
-    		joy.rMode_limit = 0;
-    	}else if(joy.getRawButton(8)){
-    		joy.rMode_limit = .2;
-    	}else if(joy.getRawButton(9)){
-    		joy.rMode_limit = .3;
-    	}else if(joy.getRawButton(10)){
-    		joy.rMode_limit = .5;
+    	if(joy.getRawButton(Parameters.button_setRotation_one)){
+    		joy.rLimit = Parameters.rMode_limit_one;
+    	}else if(joy.getRawButton(Parameters.button_setRotation_one)){
+    		joy.rLimit = Parameters.rMode_limit_two;
+    	}else if(joy.getRawButton(Parameters.button_setRotation_one)){
+    		joy.rLimit = Parameters.rMode_limit_three;
+    	}else if(joy.getRawButton(Parameters.button_setRotation_one)){
+    		joy.rLimit = Parameters.rMode_limit_four;
     	}
     		
-    	if (joy.getRawButton(3)){
+    	if (joy.getRawButton(Parameters.button_invertDrive)){
     		direction += Math.PI;
     	}
     	

@@ -25,9 +25,6 @@ public class Wheel extends CANJaguar{
 	public boolean invert = false;
 	public boolean enabled = true;
 	
-	public static double ramp = 8; 		//time constant (percent (out of 1) per second)
-	public static double maxCurrent = 100;
-	
 	private double value;
 	private double target;
 
@@ -83,12 +80,12 @@ public class Wheel extends CANJaguar{
 	 *@param time time passed since last call to update (in seconds)
 	 **/
 	public void update(double time){
-		if(this.getOutputCurrent() > maxCurrent){
+		if(this.getOutputCurrent() > Parameters.maxCurrent){
 			Logger.log("Maximum Current Exceeded"); 
 		}
 
 		//percent based:
-		double increment = Math.signum(target-value) * time * ramp;
+		double increment = Math.signum(target-value) * time * Parameters.ramp;
 		
 		//this will check if increment will overshoot the target
 		if(Math.abs(target-value) < Math.abs(increment)){

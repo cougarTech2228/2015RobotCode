@@ -35,7 +35,7 @@ public class Logger{
 	
 	public static void setUpFile(){
 		String date = dateScrub(new Date().toString());
-		file = new File("/U/Data" + date + ".txt");
+		file = new File(Parameters.logLocation + date + ".txt");
 		
 		// if file doesn't exists, then create it
 		if (!file.exists()) {
