@@ -23,7 +23,7 @@ public class DriveBase{
     public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
     	//joy = new Joystick(joyPort);
     	joy = new AdvancedJoystick(joyPort);
-    	joy.defaultMode();
+    	//joy.defaultMode();
 		joy.setBypass(false);
 		
         wheelFR = new Wheel(fR, Parameters.COUNTS_PER_REV, "front right");
@@ -43,11 +43,11 @@ public class DriveBase{
     public void mecanumDrive(double time){
     	if(joy.getRawButton(Parameters.button_setRotation_one)){
     		joy.rLimit = Parameters.rMode_limit_one;
-    	}else if(joy.getRawButton(Parameters.button_setRotation_one)){
+    	}else if(joy.getRawButton(Parameters.button_setRotation_two)){
     		joy.rLimit = Parameters.rMode_limit_two;
-    	}else if(joy.getRawButton(Parameters.button_setRotation_one)){
+    	}else if(joy.getRawButton(Parameters.button_setRotation_three)){
     		joy.rLimit = Parameters.rMode_limit_three;
-    	}else if(joy.getRawButton(Parameters.button_setRotation_one)){
+    	}else if(joy.getRawButton(Parameters.button_setRotation_four)){
     		joy.rLimit = Parameters.rMode_limit_four;
     	}
     		

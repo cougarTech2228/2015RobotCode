@@ -14,7 +14,7 @@ public class Parameters {
 	public static double rMode_limit_one = 0;
 	public static double rMode_limit_two= .2;
 	public static double rMode_limit_three = .3;
-	public static double rMode_limit_four = .65;
+	public static double rMode_limit_four = .7;
 	
 	public static double rMode_max = 1;
 	public static double rMode_min = .3;
