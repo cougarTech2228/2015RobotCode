@@ -19,6 +19,8 @@ public class DriveBase{
     PowerDistributionPanel panel;
 	
 	int COUNTS_PER_REV;
+	double direction = Math.PI;
+	
 	
     public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
     	//joy = new Joystick(joyPort);
@@ -37,23 +39,25 @@ public class DriveBase{
 		wheelBL.setInvert(true);
 		
 		//wheelFL.enabled = false;
-		wheelFR.enabled = false;
-		wheelBL.enabled = false;
-		wheelBR.enabled = false;
+		//wheelFR.enabled = false;
+		//wheelBL.enabled = false;
+		//wheelBR.enabled = false;
     }
    
     public void mecanumDrive(double time){
-    	if(joy.getRawButton(6)){
+    	if(joy.getRawButton(7)){
     		joy.rMode_limit = 0;
-    	}else if(joy.getRawButton(7)){
-    		joy.rMode_limit = .3;
     	}else if(joy.getRawButton(8)){
-    		joy.rMode_limit = .6;
+    		joy.rMode_limit = .2;
     	}else if(joy.getRawButton(9)){
-    		joy.rMode_limit = .9;
+    		joy.rMode_limit = .3;
+    	}else if(joy.getRawButton(10)){
+    		joy.rMode_limit = .5;
     	}
     		
-    	
+    	if (joy.getRawButton(3)){
+    		direction += Math.PI;
+    	}
     	
     	double lMag;//linear magnitude (-1 to 1)
     	double dir;//direction (in radians)
@@ -62,7 +66,7 @@ public class DriveBase{
     	    	
     	//get mag. dir. and rot. from the joystick
     	lMag = joy.getMagnitude();
-    	dir = -joy.getDirectionRadians();
+    	dir = -joy.getDirectionRadians() + direction;
     	rotate = joy.getTwist();
     	
     	SmartDashboard.putNumber("angle", Math.toDegrees(dir));
@@ -70,13 +74,12 @@ public class DriveBase{
     	SmartDashboard.putNumber("magnitude", lMag);
 
     	//set each motors percent speed based on the direction, magnetude and velocity
-    	v1 = lMag*Math.sin(dir + (Math.PI/4)) + rotate;
-    	v2 = lMag*Math.cos(dir + (Math.PI/4)) - rotate;
-    	v3 = lMag*Math.cos(dir + (Math.PI/4)) + rotate;
-    	v4 = lMag*Math.sin(dir + (Math.PI/4)) - rotate;
+    	v1 = lMag*Math.sin(dir + (Math.PI/4)) - rotate;
+    	v2 = lMag*Math.cos(dir + (Math.PI/4)) + rotate;
+    	v3 = lMag*Math.cos(dir + (Math.PI/4)) - rotate;
+    	v4 = lMag*Math.sin(dir + (Math.PI/4)) + rotate;
     	
     	//push new motor speed to the Jaguars
-    	
     	wheelFR.setVoltage(v1);
 		wheelFL.setVoltage(v2);
 		wheelBR.setVoltage(v3);

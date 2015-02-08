@@ -5,9 +5,17 @@ import edu.wpi.first.wpilibj.Joystick;
 /**
  *A Class extending joystick meant for modifying how input is viewed
  *
- *@param rMode settings for modifying rotation input
- *@param lMode settings for modifying rotation input
- *@param bypass set this flag to true to disable input mapping 
+ * @param rMode settings for modifying rotation input
+ * @param lMode settings for modifying rotation input
+ * 
+ * @param min all joystick values up to this will map to zero (range 0-1)
+ * @param max all joystick values past this will map to <limit> (range 0-1)
+ * @param limit the max value for the magnitude (range 0-1)
+ * @param curvature how curved the input to output graph for the joystick is, (percent: range 0-1)\
+ * @param invert whether or not to invert the joystick
+ *
+ *@param bypass set this flag to true to disable input mapping
+ * 
  **/
 
 public class AdvancedJoystick extends Joystick{
@@ -68,7 +76,7 @@ public class AdvancedJoystick extends Joystick{
 			return 0;
 		}
 		
-		double limit = (lMode_maxLimit - lMode_minLimit) * this.getThrottle() + lMode_minLimit;
+		double limit = (lMode_maxLimit - lMode_minLimit) * (-1*this.getThrottle()+1) + lMode_minLimit;
 		
 		if(basic >= lMode_max){
 			return limit*negative;
@@ -173,8 +181,8 @@ public class AdvancedJoystick extends Joystick{
 	 *sets joystick modes to default values 
 	 **/
 	public void defaultMode(){
-		setLinearMode(.1,.9,1,.1,.2,false);
-		setRotationalMode(.3,1,.65,.8,false);
+		setLinearMode(.1,.95,1,.2,.2,false);
+		setRotationalMode(.3,1,.3,.8,false);
 	}
 	
 	/**

@@ -98,7 +98,7 @@ public class Wheel extends CANJaguar{
 			value += increment;	
 		}
 		
-		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",target) + " " + increment);
+		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",target) + " " +String.format("%.2f",increment));
 		
 		if(enabled){
 			super.set(value);
