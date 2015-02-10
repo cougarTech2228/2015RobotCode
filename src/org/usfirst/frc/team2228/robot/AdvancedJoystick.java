@@ -3,23 +3,11 @@ package org.usfirst.frc.team2228.robot;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- *A Class extending joystick meant for modifying how input is viewed
- *
- * @param rMode settings for modifying rotation input
- * @param lMode settings for modifying rotation input
- * 
- * @param min all joystick values up to this will map to zero (range 0-1)
- * @param max all joystick values past this will map to <limit> (range 0-1)
- * @param limit the max value for the magnitude (range 0-1)
- * @param curvature how curved the input to output graph for the joystick is, (percent: range 0-1)\
- * @param invert whether or not to invert the joystick
- *
- *@param bypass set this flag to true to disable input mapping
- * 
+ * A Class extending joystick meant for modifying how input is viewed 
  **/
-
 public class AdvancedJoystick extends Joystick{
-	double rotation = Math.PI;
+	
+	//the current rotational limit (amount to rotate at full twist)
 	double rLimit = Parameters.rMode_limit_four;
 	
 	boolean bypass = false;
@@ -34,17 +22,20 @@ public class AdvancedJoystick extends Joystick{
 	}
 	
 	/**
-	 * get the direction of the joystick
+	 * get the direction of the joystick 
 	 * 
 	 * @see edu.wpi.first.wpilibj.Joystick#getDirectionRadians()
 	 **/
 	public double getDirectionRadians(){
-		return super.getDirectionRadians() + rotation + (Parameters.lMode_invert ? Math.PI : 0);
+		//if invert is false, add PI radians 
+		//(logically should be the opposite, but isn't so, idk, don't change it unless it stops working)
+		return super.getDirectionRadians() + (Parameters.lMode_invert ? 0 : Math.PI);
 	}
 	
 	/**
-	 * get the mapped magnitude of the joystick
+	 * get the mapped linear magnitude of the joystick
 	 * 
+	 * @see org.usfirst.frc.team2228.Parameters#lMode_curvature for info on how input is mapped
 	 * @see edu.wpi.first.wpilibj.Joystick#getMagnitude()
 	 */
 	public double getMagnitude(){
@@ -84,6 +75,9 @@ public class AdvancedJoystick extends Joystick{
 	/*
 	 * get the mapped rotational magnitude of the joystick
 	 * 
+	 * get the mapped magnitude of the joystick
+	 * 
+	 * @see org.usfirst.frc.team2228.Parameters#rMode_curvature for info on how input is mapped
 	 * @see edu.wpi.first.wpilibj.Joystick#getTwist()
 	 */
 	public double getTwist(){
@@ -142,6 +136,8 @@ public class AdvancedJoystick extends Joystick{
 		return true;
 	}
 	
+	//TODO fix the documentation of the fallowing methods
+	
 	/**
 	 * sets the rotation modes
 	 *
@@ -182,7 +178,8 @@ public class AdvancedJoystick extends Joystick{
 	}
 	
 	/**
-	 * set the bypass flag
+	 * set the bypass flag 
+	 * if true, getMagnitude() and getTwist() will return their relative values from the superclass, without mapping
 	 * 
 	 * @param bool new value for bypass
 	 */

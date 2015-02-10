@@ -20,14 +20,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Wheel extends CANJaguar{
 	public int port;		//CAN id
 	
-	public String name;			//name for this wheel 
+	public String name;		//name for this wheel 
     
-	public boolean invert = false;
-	public boolean enabled = true;
+	public boolean invert = false;	//invert this wheel?
+	public boolean enabled = true;  //if this is true, the wheel wont move, ever
 	
-	private double value;
-	private double target;
+	private double value;	//the current value sent to the jaguars
+	private double target;  //the target value to ramp the jaguars to
 
+	/**
+	 * Constructs the wheel
+	 * 
+	 * @param port the CAN id for the jaguar controlling this wheel
+	 * @param encoderCPR the counts per revolution of the encoder, used for position and speed control
+	 * @param name the name of this wheel, used for logging
+	 */
 	public Wheel(int port, int encoderCPR, String name){
 		super(port);
 		this.port = port;
@@ -41,14 +48,18 @@ public class Wheel extends CANJaguar{
 	 * @param volts percent voltage to drive the motor
 	 **/
 	public void setVoltage(double percent){
+		//check if the control mode is correct
 		if( ! this.getControlMode().equals(CANJaguar.ControlMode.PercentVbus)){
+			//set <value> to an appropriate value, set the correct control mode, and enable it
 			this.value = this.getOutputVoltage();
 			this.setPercentMode();
 			this.enableControl();
 			SmartDashboard.putString(name + ": mode", "voltage");
 		}
 
+		//check for invert
 		if(invert){
+			//invert the signal
 			percent *= -1;
 		}
 		
@@ -57,25 +68,32 @@ public class Wheel extends CANJaguar{
 	}
 	
 	/** 
-	  * sets the CANJaguar value
+	  * sets the CANJaguar value, and logs it in the dashboard
 	  *
 	  * @see CANJaguar.set(double value)
 	  * @param value the value to run the jaguars at
 	  **/
 	public void set(double value){
+		//check if motor is enabled
 		if(enabled){
+			//print formated value to the dashboard
 			SmartDashboard.putString(name, String.format("%.2f",value));
 			super.set(value);
 		}
 	}  
 	  
+	/**
+	 * simply sets the target value for ramping
+	 * 
+	 * @param value the new target value
+	 */
 	public void target(double value){
 		target = value;
 		//set(this.value);
 	}
 	
 	/**
-	 * updates the motor to the new speed based on this.ramp
+	 * updates the motor to the new speed based on Parameters.ramp
 	 *
 	 *@param time time passed since last call to update (in seconds)
 	 **/
@@ -84,7 +102,7 @@ public class Wheel extends CANJaguar{
 			Logger.log("Maximum Current Exceeded"); 
 		}
 
-		//percent based:
+		//this will set increment to the correct amount based on ramp and time and the sign (direction) of the change
 		double increment = Math.signum(target-value) * time * Parameters.ramp;
 		
 		//this will check if increment will overshoot the target
@@ -92,12 +110,16 @@ public class Wheel extends CANJaguar{
 			//and if so the new value will be set to target
 			value = target;
 		}else{
+			//otherwise increment value
 			value += increment;	
 		}
 		
+		//log value, target, and increment, formated to 2 decimal places
 		SmartDashboard.putString(name, String.format("%.2f",value) + "/" + String.format("%.2f",target) + " " +String.format("%.2f",increment));
 		
+		//if the motor is enabled
 		if(enabled){
+			//send the new value to the jaguar
 			super.set(value);
 		}
 	}
