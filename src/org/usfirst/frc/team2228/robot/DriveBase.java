@@ -31,7 +31,7 @@ public class DriveBase{
 	 * @param fL the CAN id for the front right wheel's jaguar
 	 * @param fR the CAN id for the front left wheel's jaguar
 	 */
-    public DriveBase(int joyPort, int bR, int bL, int fL, int fR){
+    public DriveBase(int joyPort, int fR, int fL, int bR, int bL){
     	//creates the AdvancedJoystick object
     	joy = new AdvancedJoystick(joyPort);
     	

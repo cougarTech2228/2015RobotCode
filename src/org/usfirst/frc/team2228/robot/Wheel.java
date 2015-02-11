@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Wheel extends CANJaguar{
 	public int port;		//CAN id
 	
-	public String name;		//name for this wheel 
+	public String name;		//name for this wheel
     
 	public boolean invert = false;	//invert this wheel?
 	public boolean enabled = true;  //if this is true, the wheel wont move, ever

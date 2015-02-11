@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2228.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 
 
@@ -155,6 +157,26 @@ public class Parameters {
 	 */
 	public static int COUNTS_PER_REV = 256;
 	
+	/**
+	 * CAN id for the FR wheel's jaguar
+	 */
+	public static int canID_FR  = 11;
+
+	/**
+	 * CAN id for the FL wheel's jaguar
+	 */	
+	public static int canID_FL  = 10;
+	
+	/**
+	 * CAN id for the BR wheel's jaguar
+	 */
+	public static int canID_BR  = 12;
+	
+	/**
+	 * CAN id for the BL wheel's jaguar
+	 */
+	public static int canID_BL  = 13;
+	
 	//wheel-----------------------------------------------------------------------------------
 	
 	/**
@@ -177,5 +199,53 @@ public class Parameters {
 	 * If using a flash drive this should be somewhere under /U/
 	 */
 	public static String logLocation = "/U/Data";
+
+	/**
+	 * this will push some config values to the smart-dashboard
+	 */
+	public static void smartdashboard_set(){
+		SmartDashboard.putNumber("ramp", ramp);
+		
+		SmartDashboard.putNumber("rotation max", rMode_max);
+		SmartDashboard.putNumber("rotation min", rMode_min);
+		SmartDashboard.putNumber("rotation curvature", rMode_curvature);
+		SmartDashboard.putNumber("rotation limit 1", rMode_limit_one);
+		SmartDashboard.putNumber("rotation limit 2", rMode_limit_two);
+		SmartDashboard.putNumber("rotation limit 3", rMode_limit_three);
+		SmartDashboard.putNumber("rotation limit 4", rMode_limit_four);
+		SmartDashboard.putBoolean("rotation invert", rMode_invert);
+		
+		SmartDashboard.putNumber("linear max", lMode_max);
+		SmartDashboard.putNumber("linear min", lMode_min);
+		SmartDashboard.putNumber("linear curvature", lMode_curvature);
+		SmartDashboard.putNumber("linear max limit", lMode_maxLimit);
+		SmartDashboard.putNumber("linear min limit", lMode_minLimit);
+	}
+	
+	/**
+	 * this will pull values from the smart-dashboard
+	 * and set the config variables to the new user specified values
+	 * remember, these new values will be erased on robot reset
+	 */
+	public static void smartdashboard_get(){
+		SmartDashboard.putNumber("ramp", ramp);
+		
+		rMode_max = SmartDashboard.getNumber("rotation max");
+		rMode_min = SmartDashboard.getNumber("rotation min", rMode_min);
+		rMode_curvature = SmartDashboard.getNumber("rotation curvature", rMode_curvature);
+		rMode_limit_one = SmartDashboard.getNumber("rotation limit 1", rMode_limit_one);
+		rMode_limit_two = SmartDashboard.getNumber("rotation limit 2", rMode_limit_two);
+		rMode_limit_three = SmartDashboard.getNumber("rotation limit 3", rMode_limit_three);
+		rMode_limit_four = SmartDashboard.getNumber("rotation limit 4", rMode_limit_four);
+		rMode_invert = SmartDashboard.getBoolean("rotation invert", rMode_invert);
+		
+		lMode_max = SmartDashboard.getNumber("linear max");
+		lMode_min = SmartDashboard.getNumber("linear min");
+		lMode_curvature = SmartDashboard.getNumber("linear curvature");
+		lMode_maxLimit = SmartDashboard.getNumber("linear max limit");
+		lMode_minLimit = SmartDashboard.getNumber("linear min limit");
+		
+		smartdashboard_set();
+	}
 	
 }

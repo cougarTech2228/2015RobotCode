@@ -24,7 +24,8 @@ public class Robot extends IterativeRobot {
 	
     public void robotInit() {
     	panel = new PowerDistributionPanel();
-    	drive = new DriveBase(0/*joy*/, 12/*BR*/, 13/*BL*/, 10/*FL*/, 11/*FR*/);
+    	drive = new DriveBase(0/*joy*/, Parameters.canID_FR, Parameters.canID_FL, Parameters.canID_BR, Parameters.canID_BL);
+    	Parameters.smartdashboard_set();
     	//Logger.setUpFile();
     }
 
@@ -43,6 +44,8 @@ public class Robot extends IterativeRobot {
     }
     
     public void teleopPeriodic() {
+    	Parameters.smartdashboard_get();
+    	
     	newTime = Timer.getFPGATimestamp();
     	time = newTime - oldTime;
     	oldTime = newTime;
