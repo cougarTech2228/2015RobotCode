@@ -1,30 +1,58 @@
 package org.usfirst.frc.team2228.modules;
 
-import com.ni.vision.NIVision;
-import com.ni.vision.NIVision.DrawMode;
-import com.ni.vision.NIVision.Image;
-import com.ni.vision.NIVision.ShapeMode;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.vision.AxisCamera;
-
-public class Vision
+public class Camera
 {
-	int session;
-    Image frame;
-    AxisCamera camera;
-    NIVision.Rect rect = new NIVision.Rect(10, 10, 100, 100);
+	Servo s1, s2;
+	double pos;
+	double throt;
+	Joystick joy;
 	
-	public Vision()
-	{
-		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-		camera = new AxisCamera("10.22.28.21");		
+	public Camera(Joystick joy){
+		s1 = new Servo(8);
+		s2 = new Servo(9);
+		this.joy = joy;
 	}
 	
-	public void drawTarget()
-	{
-		camera.getImage(frame);
-        NIVision.imaqDrawShapeOnImage(frame, frame, rect, DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 0.0f);
-        CameraServer.getInstance().setImage(frame);
+	public void moveCam(){
+		
+		
+		switch(joy.getPOV()){
+			default:
+				//no move
+				s2.set(0.5);
+				s1.set(0.51);
+				break;
+			case 0:
+				s2.set(0.53);
+				break;
+			case 315:
+				s2.set(0.52);
+				s1.set(0.52);
+				break;
+			case 270:
+				s1.set(0.53);
+				break;
+			case 225:
+				s1.set(0.48);
+				s2.set(0.48);
+				break;
+			case 180:
+				s2.set(0.48);
+				break;
+			case 135:
+				s2.set(0.48);
+				s1.set(0.48);
+				break;
+			case 90:
+				s1.set(0.49);
+				break;
+			case 45:
+				s1.set(0.48);
+				s2.set(0.53);
+				break;
+		}
 	}
 }
