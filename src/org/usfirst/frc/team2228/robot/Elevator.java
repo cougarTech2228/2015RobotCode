@@ -5,149 +5,40 @@ import edu.wpi.first.wpilibj.TalonSRX;
 
 public class Elevator
 {
-
-	TalonSRX tal;
-	static DigitalInput di1;
-	static DigitalInput di2;
-	static DigitalInput di3;
-	static DigitalInput di4;
-	static DigitalInput di5;
-	double curPos = 0;
-	double status = 0;
-
+	Jaguar mElevator;
+	
 	/*
-	 * UP = 1 DOWN = -1 NO MOVE = 0 MAN_UP = 0.5 MAN_DOWN = -0.5
-	 */
-
-	public Elevator()
+	 * CanElevator
+	 * -----------
+	 * @param mElevatorPort - CAN ID for elevator motor
+	 * @param rampRate - Voltage to go in 1 second
+	 * 
+	 * Elevator for lifting and lower cans, voltage is ramped, soft limits are configured via web interface
+	 */	
+	public Elevator(int mElevatorPort, int rampRate)
 	{
-
-		tal = new TalonSRX(0);
-		di1 = new DigitalInput(1);
-		di2 = new DigitalInput(2);
-		di3 = new DigitalInput(3);
-		di4 = new DigitalInput(4);
-		di5 = new DigitalInput(5);
-
+		mElevator = new Jaguar(mElevatorPort);
+		//mElevator.SetRampThrottle(rampRate);
 	}
-
-	public static int checkStage()
+	
+	public void lift(double speed)
 	{
-
-		if (di1.get())
+		mElevator.set(speed);
+	}
+	
+	public void update(){
+		//Can Elevator
+		if(controlJoy.getPOV() == 0)
 		{
-			return 1;
+			lift(-0.6);
 		}
-		else if (di2.get())
+		else if(controlJoy.getPOV() == 180)
 		{
-			return 2;
-		}
-		else if (di3.get())
-		{
-			return 3;
-		}
-		else if (di4.get())
-		{
-			return 4;
-		}
-		else if (di5.get())
-		{
-			return 5;
+			lift(0.25);
 		}
 		else
 		{
-			return 0;
-		}
-
-	}
-
-	public void manualMove(int s)
-	{
-
-		trackLocation();
-		if (s == 1)
-		{
-			status = 0.5;
-			tal.set(1.0);
-
-		}
-		else if (s == -1)
-		{
-			status = -0.5;
-			tal.set(-1.0);
-
-		}
-		else
-		{
-			status = 0;
-			tal.set(0.0);
-		}
-
-	}
-
-	public boolean autoMove(int p)
-	{
-
-		if (status != 0.5 && status != -0.5)
-		{
-			if (p > curPos)
-			{
-				if (checkStage() == p)
-				{
-					tal.set(0);
-					return true;
-				}
-				else
-				{
-					tal.set(1);
-					return false;
-				}
-			}
-			else if (p < curPos)
-			{
-				if (checkStage() == p)
-				{
-					tal.set(0);
-					return true;
-				}
-				else
-				{
-					tal.set(-1);
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
+			lift(0.0);
 		}
 	}
-
-	private void trackLocation()
-	{
-
-		if (checkStage() == (int) (checkStage()))
-		{
-			curPos = checkStage();
-		}
-		else if (status == 1 || status == 0.5)
-		{
-			if (curPos - (int) (curPos) != 0.5)
-			{
-				curPos += 0.5;
-			}
-		}
-		else if (status == -1 || status == -0.5)
-		{
-			if (curPos - (int) (curPos) != 0.5)
-			{
-				curPos -= 0.5;
-			}
-		}
-	}
-
 }
