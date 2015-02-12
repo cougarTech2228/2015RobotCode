@@ -2,6 +2,7 @@
 package org.usfirst.frc.team2228.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,10 +22,17 @@ public class Robot extends IterativeRobot {
 	
 	DriveBase drive;
 	PowerDistributionPanel panel;
+	Elevator elevator;
+	Camera camera;
+	
+	int elevator_pwm = 7;
 	
     public void robotInit() {
     	panel = new PowerDistributionPanel();
     	drive = new DriveBase(0/*joy*/, Parameters.canID_FR, Parameters.canID_FL, Parameters.canID_BR, Parameters.canID_BL);
+    	elevator = new Elevator(elevator_pwm, 123456);
+    	camera = new Camera(new Joystick(0));
+    	
     	Parameters.smartdashboard_set();
     	//Logger.setUpFile();
     }
@@ -56,6 +64,9 @@ public class Robot extends IterativeRobot {
     	panel.clearStickyFaults();
     	drive.mecanumDrive(time);
     	//Logger.log("DriveVoltage: " + drive.panel.getTemperature());
+    	
+    	elevator.update();
+    	camera.update();
     }
     
     /**
