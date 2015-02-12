@@ -16,7 +16,7 @@ public class Camera
 		this.joy = joy;
 	}
 	
-	public void moveCam(){
+	public void update(){
 		
 		
 		switch(joy.getPOV()){
