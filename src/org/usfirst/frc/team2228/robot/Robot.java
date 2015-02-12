@@ -44,6 +44,7 @@ public class Robot extends IterativeRobot {
     }
     
     public void teleopPeriodic() {
+    	//check for changes in joystick config
     	Parameters.smartdashboard_get();
     	
     	newTime = Timer.getFPGATimestamp();

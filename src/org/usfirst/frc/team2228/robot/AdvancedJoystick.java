@@ -39,24 +39,29 @@ public class AdvancedJoystick extends Joystick{
 	 * @see edu.wpi.first.wpilibj.Joystick#getMagnitude()
 	 */
 	public double getMagnitude(){
+		//this gets the direct input from the joystick
 		double basic = super.getMagnitude();
 		
 		if(bypass){
 			return basic;
 		}
 		
+		//this will handle the possiblity of negative magnitudes
 		int negative = 1;
 		if (basic < 0){
 			basic *= -1;
 			negative = -1;
 		}	
 	
+		//if the magnitude is less than min, return 0
 		if(basic <= Parameters.lMode_min){
 			return 0;
 		}
 		
+		//find the limit using the max and min limits, interpolating between them using the throttle on the joystick
 		double limit = (Parameters.lMode_maxLimit - Parameters.lMode_minLimit) * (-1*this.getThrottle()+1) + Parameters.lMode_minLimit;
 		
+		//if the magnitude is past the max, return the limit
 		if(basic >= Parameters.lMode_max){
 			return limit*negative;
 		}
@@ -67,6 +72,7 @@ public class AdvancedJoystick extends Joystick{
 		//the value of this input on a unit circle centered at 0,1
 		double curve = 1 + -Math.sqrt(1-Math.pow(linear,2));
 		
+		//calculate the output as a weighted average of the linear and curved models, using curvature as the weight
 	    double output = (curve*Parameters.lMode_curvature + linear*(1-Parameters.lMode_curvature))*negative*limit;
 		
 	    return output;
@@ -81,22 +87,26 @@ public class AdvancedJoystick extends Joystick{
 	 * @see edu.wpi.first.wpilibj.Joystick#getTwist()
 	 */
 	public double getTwist(){
+		//this gets the direct input from the joystick
 		double basic = super.getTwist();
 		
 		if(bypass){
 			return basic;
 		}
 		
+		//this will handle the possiblity of negative magnitudes
 		int negative = Parameters.rMode_invert?-1:1;
 		if (basic < 0){
 			basic *= -1;
 			negative = -1;
 		}
 		
+		//if the magnitude is less than min, return 0
 		if(basic <= Parameters.rMode_min){
 			return 0;
 		}
 		
+		//if the magnitude is past the max, return the limit
 		else if(basic >= Parameters.rMode_max){
 			return rLimit*negative;
 		}
@@ -107,6 +117,7 @@ public class AdvancedJoystick extends Joystick{
 		//the value of this input on a unit circle centered at 0,1
 		double curve = 1 + -Math.sqrt(1-Math.pow(linear,2));
 		
+		//calculate the output as a weighted average of the linear and curved models, using curvature as the weight
 	    double output = (curve*Parameters.rMode_curvature + linear*(1-Parameters.rMode_curvature))*negative*rLimit;
 	    
 		return output;

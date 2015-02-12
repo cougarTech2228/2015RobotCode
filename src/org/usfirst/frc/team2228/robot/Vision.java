@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2228.modules;
+package org.usfirst.frc.team2228.robot;
 
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.DrawMode;
