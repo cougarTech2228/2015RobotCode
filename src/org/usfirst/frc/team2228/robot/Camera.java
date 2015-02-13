@@ -17,8 +17,6 @@ public class Camera
 	}
 	
 	public void update(){
-		
-		
 		switch(joy.getPOV()){
 			default:
 				//no move

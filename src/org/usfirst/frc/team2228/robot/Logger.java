@@ -60,7 +60,9 @@ public class Logger{
 				
 				try{
 					StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-					module = stack[stack.length-2].getClassName();
+
+					module = stack[1].getClassName();
+					
 				}catch(Exception e){
 					module = "";
 				}
