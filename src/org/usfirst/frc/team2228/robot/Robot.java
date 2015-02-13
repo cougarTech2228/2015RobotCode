@@ -2,7 +2,7 @@ package org.usfirst.frc.team2228.robot;
 
 import org.usfirst.frc.team2228.modules.Camera;
 import org.usfirst.frc.team2228.modules.CanElevator;
-import org.usfirst.frc.team2228.modules.Drivebase;
+import org.usfirst.frc.team2228.modules.SimpleDriveBase;
 import org.usfirst.frc.team2228.modules.Pneumatics;
 import org.usfirst.frc.team2228.modules.ToteElevator2;
 
@@ -16,7 +16,7 @@ public class Robot extends IterativeRobot
 	Joystick driveJoy;
 	Joystick launchPad;
 	Joystick controlJoy;
-	Drivebase drive;
+	SimpleDriveBase drive;
 	CanElevator can;
 	Camera cam;
 	ToteElevator2 lifter;
@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot
 		pneu = new Pneumatics(0);
 		lifter = new ToteElevator2(controlJoy);
 		cam = new Camera(controlJoy);
-		drive = new Drivebase(10, 13, 11, 12, driveJoy, 6);
+		drive = new SimpleDriveBase(10, 13, 11, 12, driveJoy, 6);
 //		can = new CanElevator(9, 6);
 	}
 

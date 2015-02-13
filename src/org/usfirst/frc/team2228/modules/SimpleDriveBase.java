@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 
-public class Drivebase
+public class SimpleDriveBase
 {
 	
 	CANJaguar mLF;
@@ -24,7 +24,7 @@ public class Drivebase
 	 * 
 	 * Initializes the class and necessary devices
 	 */
-	public Drivebase(int mLFPort, int mLBPort, int mRFPort, int mRBPort, Joystick joy, int rampRate)
+	public SimpleDriveBase(int mLFPort, int mLBPort, int mRFPort, int mRBPort, Joystick joy, int rampRate)
 	{
 		mLF = new CANJaguar(mLFPort);
 		mLB = new CANJaguar(mLBPort);
