@@ -2,12 +2,16 @@ package org.usfirst.frc.team2228.robot;
 
 import org.usfirst.frc.team2228.modules.Camera;
 import org.usfirst.frc.team2228.modules.CanElevator;
+import org.usfirst.frc.team2228.modules.DriveBase;
+import org.usfirst.frc.team2228.modules.Logger;
 import org.usfirst.frc.team2228.modules.SimpleDriveBase;
 import org.usfirst.frc.team2228.modules.Pneumatics;
 import org.usfirst.frc.team2228.modules.ToteElevator2;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot
 {
@@ -16,12 +20,15 @@ public class Robot extends IterativeRobot
 	Joystick driveJoy;
 	Joystick launchPad;
 	Joystick controlJoy;
-	SimpleDriveBase drive;
+	DriveBase drive;
 	CanElevator can;
 	Camera cam;
 	ToteElevator2 lifter;
 	Pneumatics pneu;
 	
+	double time;
+	double oldTime = 0;
+	double newTime = 0;
 	
 	public void robotInit()
 	{
@@ -31,7 +38,7 @@ public class Robot extends IterativeRobot
 		pneu = new Pneumatics(0);
 		lifter = new ToteElevator2(controlJoy);
 		cam = new Camera(controlJoy);
-		drive = new SimpleDriveBase(10, 13, 11, 12, driveJoy, 6);
+		drive = new DriveBase(RobotMap.driveJoy , RobotMap.canID_FR, RobotMap.canID_FL, RobotMap.canID_BR, RobotMap.canID_BL);
 //		can = new CanElevator(9, 6);
 	}
 
@@ -47,14 +54,31 @@ public class Robot extends IterativeRobot
 
 	public void teleopInit()
 	{
-		
+    	Logger.resetTime();	
 	}
 	
 	public void teleopPeriodic()
 	{
+    	//check for changes in joystick config
+    	Parameters.smartdashboard_get();
+    	
+    	//get the time for the previous iteration
+    	newTime = Timer.getFPGATimestamp();
+    	time = newTime - oldTime;
+    	oldTime = newTime;
+    	
+    	//log the time (update loop)
+    	SmartDashboard.putNumber("time", time);
+    	
+    	drive.mecanumDrive(time);
+    	//Logger.log("DriveVoltage: " + drive.panel.getTemperature());
+		
 		pneu.doPusher();
-		drive.drive();
-		cam.moveCam();
+		
+		//pass in time for ramping
+		drive.mecanumDrive(time);
+		
+		cam.update();
 		lifter.moveLifter();
 		
 		
