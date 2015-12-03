@@ -1,7 +1,6 @@
 package org.usfirst.frc.team2228.modules;
 
 import edu.wpi.first.wpilibj.CANJaguar;
-import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class SimpleDriveBase

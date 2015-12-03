@@ -8,27 +8,48 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Logger
 {
-	static double initialTime = Timer.getFPGATimestamp();
-	static long lastTimeILogged = 0;
-	static File file;
+	static double initialTime = Timer.getFPGATimestamp(); //gets the inital time based off the time stamp
+	static long lastTimeILogged = 0;//gets the last time the data was logged
+	static File file;//the file being created
 	public static boolean disable = true;
 	public static boolean verbose = false;
 
+	/**
+	 * Resets the initial time.
+	 */
 	public static void resetTime()
 	{
 		initialTime = Timer.getFPGATimestamp();
 	}
 
+	/**
+	 * Gets the time of the match
+	 * 
+	 * @param d
+	 * @return the scrubbed string 
+	 */
+	
 	private static String timeScrub(int d)
 	{
 		return String.valueOf(d / 60) + ":" + String.valueOf(d % 60);
 	}
-
+	
+	/**
+	 * Replaces all of the ";" with "-" to make things easier to read
+	 * @param the date 
+	 * @return the scrubbed date
+	 */
+	
 	private static String dateScrub(String date)
 	{
 		return date.replaceAll(":", "-");
 	}
-
+	
+	/**
+	 * Creates the file that will have data uploaded into it later
+	 * 
+	 */
+	
 	public static void setUpFile()
 	{
 		String date = dateScrub(new Date().toString());
@@ -46,7 +67,13 @@ public class Logger
 			}
 		}
 	}
-
+	
+	/**
+	 * Takes the message you want to add to the file
+	 * 
+	 * @param message
+	 */
+	
 	public static void log(String message)
 	{
 		long timePassed = System.currentTimeMillis() - lastTimeILogged;

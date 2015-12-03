@@ -1,7 +1,6 @@
  package org.usfirst.frc.team2228.modules; 
 
-import org.usfirst.frc.team2228.robot.Parameters;
-
+import org.usfirst.frc.team2228.robot.RobotMap;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -62,7 +61,7 @@ public class Wheel extends CANTalon{
 		//this.setVoltageRampRate(RAMP * this.getBusVoltage());
 		
 		this.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		this.setPID(Parameters.P, Parameters.I,Parameters.D);
+		this.setPID(RobotMap.P, RobotMap.I,RobotMap.D);
 	}
 		
 	/**
@@ -150,12 +149,12 @@ public class Wheel extends CANTalon{
 	 *@param time time passed since last call to update (in seconds)
 	 **/
 	public void update(double time){
-		if(this.getOutputCurrent() > Parameters.maxCurrent){
+		if(this.getOutputCurrent() > RobotMap.maxCurrent){
 			Logger.log("Maximum Current Exceeded"); 
 		}
 
 		//this will set increment to the correct amount based on ramp and time and the sign (direction) of the change
-		double increment = Math.signum(target-value) * time * Parameters.ramp;
+		double increment = Math.signum(target-value) * time * RobotMap.ramp;
 		
 		//this will check if increment will overshoot the target
 		if(Math.abs(target-value) < Math.abs(increment)){
@@ -172,7 +171,7 @@ public class Wheel extends CANTalon{
 		//if the motor is enabled
 		if(enabled){
 			//send the new value to the Talon
-			super.set(value);
+			super.set(value);			
 		}
 	}
 	

@@ -1,9 +1,7 @@
 package org.usfirst.frc.team2228.modules;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.TalonSRX;
 
 public class Elevator
 {

@@ -6,44 +6,65 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Pneumatics
 {
 
-	Solenoid sol;
-	Compressor com;
-	public boolean pushActivate = false;
+	Solenoid brake;//Creates solenoid called sol
+	Solenoid pusher;
+	Compressor comp;//Creates a compressor called com
 	
-	public Pneumatics(final int channel){
-		
-		sol = new Solenoid(channel);
-		com = new Compressor();
+	public boolean pushActivate = false;//Creates a boolean determining the states of pushActive
+	
+	
+	/**
+	 * Initializes the solenoid setting it to the channel based off the parameter.
+	 * Initializes the Compressor.
+	 * @param channel
+	 */
+	public Pneumatics(int moduleNumber, int brakePort, int pusherPort){
+		pusher = new Solenoid(3, 4);
+		brake = new Solenoid(3, 7);
+		comp = new Compressor(3);
 		
 	}
 	
+	public void clearFaults()
+	{
+		comp.clearAllPCMStickyFaults();
+	}
+	
+	/**
+	 * Activates the compressor.
+	 */
 	public void compress(){
-		com.start();
+		comp.start();
 	}
-	
+	/**
+	 * Stops the compressor.
+	 */
 	public void stopCompress(){
-		com.stop();
+		comp.stop();
 	}
 	
-	public void activate(boolean state){
-		sol.set(state);
+	/**
+	 * Activates the solenoid
+	 */
+	
+	public void brake(boolean state){
+		brake.set(state);
+		if(state){
+			compress();
+		}
 	}
 	
-	public Solenoid getSol(){
-		return sol;
-	}
-	
+	/**
+	 * Activates solenoid based off the variable pushActivate
+	 */
 	public void doPusher(){
 		
 		if(pushActivate){
-			sol.set(true);
+			pusher.set(true);
+			compress();
 		}else{
-			sol.set(false);
+			pusher.set(false);
 		}
 		
-	}
-	
-	public void setCom(Compressor com){
-		this.com = com;
 	}
 }

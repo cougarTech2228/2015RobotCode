@@ -1,7 +1,6 @@
  package org.usfirst.frc.team2228.modules; 
 
-import org.usfirst.frc.team2228.robot.Parameters;
-
+import org.usfirst.frc.team2228.robot.RobotMap;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -96,12 +95,12 @@ public class WheelJaguar extends CANJaguar{
 	 *@param time time passed since last call to update (in seconds)
 	 **/
 	public void update(double time){
-		if(this.getOutputCurrent() > Parameters.maxCurrent){
+		if(this.getOutputCurrent() > RobotMap.maxCurrent){
 			Logger.log("Maximum Current Exceeded"); 
 		}
 
 		//this will set increment to the correct amount based on ramp and time and the sign (direction) of the change
-		double increment = Math.signum(target-value) * time * Parameters.ramp;
+		double increment = Math.signum(target-value) * time * RobotMap.ramp;
 		
 		//this will check if increment will overshoot the target
 		if(Math.abs(target-value) < Math.abs(increment)){
